@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Salud — Gabi & Nacho</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --soil: #1C1A16;
+    --bark: #2E2A22;
+    --clay: #3D3830;
+    --ochre: #C8863A;
+    --sand: #E8D5B0;
+    --bone: #F5EFE4;
+    --sage: #7A9E7E;
+    --terracotta: #C4614A;
+    --mist: #A8B5A2;
+    --gabi: #C4614A;
+    --nacho: #C8863A;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--soil);
+    color: var(--bone);
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    font-size: 14px;
+  }
+
+  /* TRIBAL PATTERN HEADER */
+  .header {
+    position: relative;
+    padding: 40px 24px 32px;
+    text-align: center;
+    border-bottom: 1px solid var(--clay);
+    overflow: hidden;
+  }
+
+  .header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: repeating-linear-gradient(90deg, var(--ochre) 0px, var(--ochre) 8px, transparent 8px, transparent 16px, var(--terracotta) 16px, var(--terracotta) 24px, transparent 24px, transparent 32px);
+  }
+
+  .header-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--ochre);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 400;
+    color: var(--bone);
+    letter-spacing: 1px;
+  }
+
+  .header-sub {
+    font-size: 12px;
+    color: var(--mist);
+    margin-top: 6px;
+    letter-spacing: 1px;
+  }
+
+  /* NAV TABS */
+  .nav {
+    display: flex;
+    border-bottom: 1px solid var(--clay);
+    background: var(--bark);
+  }
+
+  .nav-tab {
+    flex: 1;
+    padding: 14px 8px;
+    text-align: center;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--mist);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    font-weight: 500;
+  }
+
+  .nav-tab.active {
+    color: var(--ochre);
+    border-bottom-color: var(--ochre);
+    background: var(--soil);
+  }
+
+  .nav-tab:hover:not(.active) { color: var(--sand); }
+
+  /* SECTIONS */
+  .section { display: none; padding: 24px 20px; }
+  .section.active { display: block; }
+
+  /* TODAY SECTION */
+  .today-date {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--mist);
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+  }
+
+  .person-block {
+    background: var(--bark);
+    border: 1px solid var(--clay);
+    border-radius: 4px;
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+
+  .person-header {
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--clay);
+  }
+
+  .person-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+  }
+
+  .person-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .person-target {
+    margin-left: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--mist);
+  }
+
+  .person-body { padding: 16px; }
+
+  .metric-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--clay);
+    font-size: 13px;
+  }
+
+  .metric-row:last-child { border-bottom: none; }
+
+  .metric-label { color: var(--mist); }
+
+  .metric-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+  }
+
+  .metric-value.good { color: var(--sage); }
+  .metric-value.warn { color: var(--ochre); }
+  .metric-value.bad { color: var(--terracotta); }
+  .metric-value.neutral { color: var(--sand); }
+
+  .delta-bar {
+    margin-top: 12px;
+    background: var(--clay);
+    height: 4px;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .delta-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.6s ease;
+  }
+
+  /* INPUT AREA */
+  .input-section {
+    background: var(--bark);
+    border: 1px solid var(--clay);
+    border-radius: 4px;
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+
+  .input-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--ochre);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  textarea {
+    width: 100%;
+    background: var(--soil);
+    border: 1px solid var(--clay);
+    border-radius: 3px;
+    color: var(--bone);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    padding: 12px;
+    resize: vertical;
+    min-height: 80px;
+    line-height: 1.6;
+  }
+
+  textarea:focus { outline: none; border-color: var(--ochre); }
+  textarea::placeholder { color: var(--clay); }
+
+  .activity-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .activity-item label {
+    font-size: 11px;
+    color: var(--mist);
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  input[type="number"], input[type="text"], select {
+    width: 100%;
+    background: var(--soil);
+    border: 1px solid var(--clay);
+    border-radius: 3px;
+    color: var(--bone);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    padding: 8px 10px;
+  }
+
+  input:focus, select:focus { outline: none; border-color: var(--ochre); }
+
+  select option { background: var(--bark); }
+
+  .checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .checkbox-row input[type="checkbox"] {
+    width: 16px; height: 16px;
+    accent-color: var(--ochre);
+  }
+
+  .checkbox-row label { font-size: 13px; color: var(--sand); }
+
+  /* BUTTONS */
+  .btn {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 3px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 8px;
+  }
+
+  .btn-primary {
+    background: var(--ochre);
+    color: var(--soil);
+    font-weight: 600;
+  }
+
+  .btn-primary:hover { background: var(--sand); }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--ochre);
+    border: 1px solid var(--ochre);
+  }
+
+  .btn-secondary:hover { background: var(--clay); }
+
+  .btn-danger {
+    background: transparent;
+    color: var(--terracotta);
+    border: 1px solid var(--terracotta);
+  }
+
+  /* CSV OUTPUT */
+  .csv-box {
+    background: var(--soil);
+    border: 1px solid var(--sage);
+    border-radius: 3px;
+    padding: 14px;
+    margin-top: 16px;
+  }
+
+  .csv-box-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--sage);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .csv-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--mist);
+    line-height: 1.8;
+    word-break: break-all;
+    white-space: pre-wrap;
+  }
+
+  /* MISSION SECTION */
+  .mission-block {
+    background: var(--bark);
+    border: 1px solid var(--clay);
+    border-radius: 4px;
+    padding: 16px;
+    margin-bottom: 14px;
+  }
+
+  .mission-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    margin-bottom: 16px;
+    color: var(--ochre);
+  }
+
+  .mission-field {
+    margin-bottom: 12px;
+  }
+
+  .mission-field label {
+    font-size: 11px;
+    color: var(--mist);
+    letter-spacing: 1px;
+    display: block;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+  }
+
+  /* HISTORY */
+  .history-row {
+    background: var(--bark);
+    border: 1px solid var(--clay);
+    border-radius: 3px;
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+  }
+
+  .history-date {
+    color: var(--ochre);
+    margin-bottom: 4px;
+  }
+
+  .history-data { color: var(--mist); line-height: 1.7; }
+
+  /* MIGRATION */
+  .migration-block {
+    background: var(--bark);
+    border: 1px solid var(--clay);
+    border-radius: 4px;
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+
+  .migration-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--terracotta);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .prompt-box {
+    background: var(--soil);
+    border: 1px solid var(--clay);
+    border-radius: 3px;
+    padding: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--mist);
+    line-height: 1.7;
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+
+  .section-divider {
+    height: 1px;
+    background: var(--clay);
+    margin: 20px 0;
+  }
+
+  .tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 2px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .tag-gabi { background: rgba(196,97,74,0.2); color: var(--terracotta); border: 1px solid var(--terracotta); }
+  .tag-nacho { background: rgba(200,134,58,0.2); color: var(--ochre); border: 1px solid var(--ochre); }
+
+  .alert {
+    padding: 10px 14px;
+    border-radius: 3px;
+    font-size: 12px;
+    margin-bottom: 12px;
+    line-height: 1.5;
+  }
+
+  .alert-info { background: rgba(122,158,126,0.15); border: 1px solid var(--sage); color: var(--sage); }
+  .alert-warn { background: rgba(200,134,58,0.15); border: 1px solid var(--ochre); color: var(--ochre); }
+
+  .tomorrow-target {
+    background: linear-gradient(135deg, rgba(200,134,58,0.1), rgba(196,97,74,0.1));
+    border: 1px solid var(--clay);
+    border-radius: 4px;
+    padding: 16px;
+    margin-top: 16px;
+    text-align: center;
+  }
+
+  .tomorrow-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--mist);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .tomorrow-kcal {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    color: var(--ochre);
+  }
+
+  .tomorrow-name {
+    font-size: 11px;
+    color: var(--mist);
+    margin-top: 2px;
+  }
+
+  .hypo-section {
+    background: rgba(196,97,74,0.1);
+    border: 1px solid rgba(196,97,74,0.4);
+    border-radius: 3px;
+    padding: 12px;
+    margin-top: 10px;
+  }
+
+  .hypo-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--terracotta);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .scrollable { max-height: 400px; overflow-y: auto; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-eyebrow">Gabi & Nacho · Valencia</div>
+  <h1>La Salud</h1>
+  <div class="header-sub">Daily health log · Performance & longevity</div>
+</div>
+
+<div class="nav">
+  <div class="nav-tab active" onclick="showTab('today')">Today</div>
+  <div class="nav-tab" onclick="showTab('log')">Log</div>
+  <div class="nav-tab" onclick="showTab('mission')">The Mission</div>
+  <div class="nav-tab" onclick="showTab('migration')">Migration</div>
+</div>
+
+<!-- TODAY TAB -->
+<div id="tab-today" class="section active">
+  <div class="today-date" id="today-date"></div>
+
+  <div id="today-summary" style="display:none">
+    <div class="person-block">
+      <div class="person-header">
+        <div class="person-dot" style="background:var(--gabi)"></div>
+        <div class="person-name" style="color:var(--gabi)">Gabi</div>
+        <div class="person-target" id="gabi-target-display"></div>
+      </div>
+      <div class="person-body" id="gabi-metrics"></div>
+    </div>
+
+    <div class="person-block">
+      <div class="person-header">
+        <div class="person-dot" style="background:var(--nacho)"></div>
+        <div class="person-name" style="color:var(--nacho)">Nacho</div>
+        <div class="person-target" id="nacho-target-display"></div>
+      </div>
+      <div class="person-body" id="nacho-metrics"></div>
+    </div>
+
+    <div id="tomorrow-targets"></div>
+
+    <div class="csv-box" id="csv-output-box" style="display:none">
+      <div class="csv-box-label">↓ Copy & paste this to Claude</div>
+      <div class="csv-text" id="csv-output"></div>
+      <button class="btn btn-secondary" onclick="copyCSV()" style="margin-top:10px">Copy to clipboard</button>
+    </div>
+  </div>
+
+  <!-- INPUT FORM -->
+  <div id="input-form">
+    <div class="alert alert-info">
+      Paste your formatted text from Claude below, or fill in manually. Log at end of day.
+    </div>
+
+    <div class="input-section">
+      <span class="input-label">Paste Claude's food output (optional)</span>
+      <textarea id="claude-paste" placeholder="GABI | Calories: 1250 | Protein: 95g | Carbs: 120g | Fat: 40g | Fibre: 18g | Magnesium: 210mg | VitD: 8mcg | Iron: 12mg | Calcium: 680mg | Zinc: 7mg | B12: 2.1mcg | Omega3: 1.1g | Potassium: 2800mg | VitC: 65mg | Folate: 280mcg&#10;NACHO | Calories: 1820 | Protein: 138g | Carbs: 168g | Fat: 52g | Fibre: 22g | ..."></textarea>
+      <button class="btn btn-secondary" onclick="parseClaude()" style="margin-top:8px">Parse Claude's output</button>
+    </div>
+
+    <div class="input-section">
+      <span class="input-label">Activity — Both</span>
+      <div class="activity-grid">
+        <div class="activity-item">
+          <label>Steps today</label>
+          <input type="number" id="steps" placeholder="e.g. 8500">
+        </div>
+        <div class="activity-item">
+          <label>Sleep hours</label>
+          <input type="number" id="sleep" placeholder="e.g. 7.5" step="0.5">
+        </div>
+      </div>
+      <div class="checkbox-row">
+        <input type="checkbox" id="gym-check" onchange="toggleGym()">
+        <label for="gym-check">Went to the gym</label>
+      </div>
+      <div id="gym-details" style="display:none; margin-top:10px">
+        <div class="activity-grid">
+          <div class="activity-item">
+            <label>Duration (mins)</label>
+            <input type="number" id="gym-duration" placeholder="e.g. 60">
+          </div>
+          <div class="activity-item">
+            <label>Intensity</label>
+            <select id="gym-intensity">
+              <option value="light">Light</option>
+              <option value="moderate" selected>Moderate</option>
+              <option value="intense">Intense</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="input-section">
+      <span class="input-label">Gabi — extras</span>
+      <div class="activity-grid">
+        <div class="activity-item">
+          <label>Alcohol units (glasses wine)</label>
+          <input type="number" id="gabi-alcohol" placeholder="0" min="0" max="10">
+        </div>
+        <div class="activity-item">
+          <label>Hypo corrections today</label>
+          <input type="number" id="gabi-hypo" placeholder="0" min="0">
+        </div>
+      </div>
+      <div id="hypo-correction-info" style="display:none" class="hypo-section">
+        <div class="hypo-title">⚡ Hypo correction reminder</div>
+        <div style="font-size:12px; color:var(--sand); line-height:1.6">
+          Fast: 4 glucose tabs or 150ml OJ or 3–4 gummy bears (~60 kcal)<br>
+          Sustain: 2–3 rice crackers or ½ banana or small slice bread (~60 kcal)<br>
+          Total per correction: ~120–150 kcal logged separately.
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" onclick="generateLog()">Generate today's log & CSV</button>
+  </div>
+</div>
+
+<!-- LOG TAB -->
+<div id="tab-log" class="section">
+  <div class="today-date">History</div>
+  <div class="alert alert-info">Upload your CSV to Claude for analysis and meal advice.</div>
+  <div id="history-list" class="scrollable">
+    <div style="color:var(--mist); font-size:13px; text-align:center; padding:30px 0">No entries yet. Start logging today.</div>
+  </div>
+  <div class="section-divider"></div>
+  <button class="btn btn-secondary" onclick="exportFullCSV()">Export full CSV</button>
+  <button class="btn btn-danger" onclick="clearHistory()" style="margin-top:8px">Clear all history</button>
+</div>
+
+<!-- MISSION TAB -->
+<div id="tab-mission" class="section">
+  <div class="mission-title">The Mission</div>
+
+  <div class="mission-block">
+    <div style="display:flex; align-items:center; gap:8px; margin-bottom:14px">
+      <div class="person-dot" style="background:var(--gabi)"></div>
+      <span style="font-family:'Playfair Display',serif; font-size:16px; color:var(--gabi)">Gabi</span>
+    </div>
+    <div class="mission-field">
+      <label>Current weight (kg)</label>
+      <input type="number" id="g-weight" placeholder="70" step="0.1">
+    </div>
+    <div class="mission-field">
+      <label>Height (cm)</label>
+      <input type="number" id="g-height" placeholder="165">
+    </div>
+    <div class="mission-field">
+      <label>Age</label>
+      <input type="number" id="g-age" placeholder="29">
+    </div>
+    <div class="mission-field">
+      <label>3-month goal (e.g. lose 3kg, build strength)</label>
+      <input type="text" id="g-goal3" placeholder="Lose 3kg, improve flexibility">
+    </div>
+    <div class="mission-field">
+      <label>6-month goal</label>
+      <input type="text" id="g-goal6" placeholder="Maintain weight, run 5K">
+    </div>
+    <div class="mission-field">
+      <label>Daily calorie target (kcal)</label>
+      <input type="number" id="g-kcal" placeholder="1450">
+    </div>
+    <div class="mission-field">
+      <label>Protein target (g)</label>
+      <input type="number" id="g-protein" placeholder="100">
+    </div>
+    <div class="mission-field">
+      <label>Carbs target (g)</label>
+      <input type="number" id="g-carbs" placeholder="130">
+    </div>
+    <div class="mission-field">
+      <label>Fat target (g)</label>
+      <input type="number" id="g-fat" placeholder="45">
+    </div>
+  </div>
+
+  <div class="mission-block">
+    <div style="display:flex; align-items:center; gap:8px; margin-bottom:14px">
+      <div class="person-dot" style="background:var(--nacho)"></div>
+      <span style="font-family:'Playfair Display',serif; font-size:16px; color:var(--nacho)">Nacho</span>
+    </div>
+    <div class="mission-field">
+      <label>Current weight (kg)</label>
+      <input type="number" id="n-weight" placeholder="71" step="0.1">
+    </div>
+    <div class="mission-field">
+      <label>Height (cm)</label>
+      <input type="number" id="n-height" placeholder="172">
+    </div>
+    <div class="mission-field">
+      <label>Age</label>
+      <input type="number" id="n-age" placeholder="30">
+    </div>
+    <div class="mission-field">
+      <label>3-month goal</label>
+      <input type="text" id="n-goal3" placeholder="Lose body fat, maintain muscle mass">
+    </div>
+    <div class="mission-field">
+      <label>6-month goal</label>
+      <input type="text" id="n-goal6" placeholder="Visible recomp, improve cardio">
+    </div>
+    <div class="mission-field">
+      <label>Daily calorie target (kcal)</label>
+      <input type="number" id="n-kcal" placeholder="1950">
+    </div>
+    <div class="mission-field">
+      <label>Protein target (g)</label>
+      <input type="number" id="n-protein" placeholder="145">
+    </div>
+    <div class="mission-field">
+      <label>Carbs target (g)</label>
+      <input type="number" id="n-carbs" placeholder="175">
+    </div>
+    <div class="mission-field">
+      <label>Fat target (g)</label>
+      <input type="number" id="n-fat" placeholder="55">
+    </div>
+  </div>
+
+  <button class="btn btn-primary" onclick="saveMission()">Save The Mission</button>
+  <div id="mission-saved" style="display:none; text-align:center; padding:10px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--sage); letter-spacing:2px; margin-top:8px">SAVED</div>
+</div>
+
+<!-- MIGRATION TAB -->
+<div id="tab-migration" class="section">
+  <div class="migration-block">
+    <div class="migration-title">⚙ Prompt 1 — Continue the app in a new chat</div>
+    <div class="prompt-box">You are a health and nutrition assistant for a couple: Gabi (female, Type 1 diabetic, 29yo, 165cm) and Nacho (male, 30yo, 172cm). Their goal is performance and longevity: strength, flexibility, balance, talking cardio and high intensity cardio, while losing body fat.
+
+GABI daily targets: 1450 kcal | Protein 100g | Carbs 130g (track NET carbs) | Fat 45g
+NACHO daily targets: 1950 kcal | Protein 145g | Carbs 175g | Fat 55g
+Both track: Fibre, Magnesium, VitD, Iron, Calcium, Zinc, B12, Omega3, Potassium, VitC, Folate
+
+When I upload a photo of food or describe what we ate, you respond with EXACTLY this format (copy both lines):
+GABI | Calories: [n] | Protein: [n]g | Carbs: [n]g | NetCarbs: [n]g | Fat: [n]g | Fibre: [n]g | Magnesium: [n]mg | VitD: [n]mcg | Iron: [n]mg | Calcium: [n]mg | Zinc: [n]mg | B12: [n]mcg | Omega3: [n]g | Potassium: [n]mg | VitC: [n]mg | Folate: [n]mcg
+NACHO | Calories: [n] | Protein: [n]g | Carbs: [n]g | NetCarbs: [n]g | Fat: [n]g | Fibre: [n]g | Magnesium: [n]mg | VitD: [n]mcg | Iron: [n]mg | Calcium: [n]mg | Zinc: [n]mg | B12: [n]mcg | Omega3: [n]g | Potassium: [n]mg | VitC: [n]mg | Folate: [n]mcg
+
+When I paste a CSV row (the app's daily output), read the deficit/surplus numbers and respond with: specific next-day food tips, what nutrients were low, and realistic Mercadona meal suggestions. Gabi's hypo corrections (fast sugar + slow carb follow-up) are logged separately and not counted against her daily target. Nacho is in moderate calorie deficit to recomp — protect muscle, do not recommend cutting protein. Targets adjust dynamically based on activity logged (weekly average of steps, gym sessions, intensity).</div>
+    <button class="btn btn-secondary" onclick="copyPrompt(1)" style="margin-top:10px">Copy prompt</button>
+  </div>
+
+  <div class="migration-block">
+    <div class="migration-title">⚙ Prompt 2 — Build spreadsheet from CSV</div>
+    <div class="prompt-box">I will upload a CSV file. Build a spreadsheet from it with one row per person per day. The columns are:
+
+Date, Person, Sleep_hrs, Kcal_consumed, Kcal_target, Kcal_delta, Protein_g, Protein_target_g, Carbs_g, NetCarbs_g, Fat_g, Fibre_g, Magnesium_mg, VitD_mcg, Iron_mg, Calcium_mg, Zinc_mg, B12_mcg, Omega3_g, Potassium_mg, VitC_mg, Folate_mcg, Steps, Gym_yn, Gym_mins, Gym_intensity, Kcal_burned_est, Net_balance, Alcohol_units (Gabi only), Hypo_corrections (Gabi only), Tomorrow_kcal_target
+
+Show a summary row at the bottom per person: average kcal delta, average protein, average steps, gym sessions per week, average sleep. Flag any micronutrient that is consistently below 70% of RDA in red.</div>
+    <button class="btn btn-secondary" onclick="copyPrompt(2)" style="margin-top:10px">Copy prompt</button>
+  </div>
+
+  <div class="migration-block">
+    <div class="migration-title">⚠ Export data before migrating</div>
+    <button class="btn btn-secondary" onclick="exportFullCSV()">Export full CSV now</button>
+  </div>
+</div>
+
+<script>
+// ─── STATE ───────────────────────────────────────────────────────────────────
+let state = {
+  mission: {
+    gabi: { weight:70, height:165, age:29, goal3:'Lose 3kg, improve flexibility', goal6:'Maintain weight, run 5K', kcal:1450, protein:100, carbs:130, fat:45 },
+    nacho: { weight:71, height:172, age:30, goal3:'Lose body fat, maintain muscle', goal6:'Visible recomp, improve cardio', kcal:1950, protein:145, carbs:175, fat:55 }
+  },
+  history: [],
+  weeklyActivity: { steps:[], gym:[] },
+  todayData: { gabi:{}, nacho:{} }
+};
+
+// ─── STORAGE ─────────────────────────────────────────────────────────────────
+async function saveState() {
+  try { await window.storage.set('la-salud-state', JSON.stringify(state)); } catch(e) {}
+}
+
+async function loadState() {
+  try {
+    const r = await window.storage.get('la-salud-state');
+    if (r && r.value) {
+      const loaded = JSON.parse(r.value);
+      state = { ...state, ...loaded };
+    }
+  } catch(e) {}
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+async function init() {
+  await loadState();
+  document.getElementById('today-date').textContent = new Date().toLocaleDateString('en-GB', {weekday:'long', year:'numeric', month:'long', day:'numeric'}).toUpperCase();
+  loadMissionFields();
+  renderHistory();
+  updateWeeklyAverage();
+}
+
+// ─── TABS ─────────────────────────────────────────────────────────────────────
+function showTab(name) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ─── GYM TOGGLE ───────────────────────────────────────────────────────────────
+function toggleGym() {
+  document.getElementById('gym-details').style.display = document.getElementById('gym-check').checked ? 'block' : 'none';
+}
+
+// ─── HYPO TOGGLE ──────────────────────────────────────────────────────────────
+document.addEventListener('input', function(e) {
+  if (e.target.id === 'gabi-hypo') {
+    document.getElementById('hypo-correction-info').style.display = parseInt(e.target.value) > 0 ? 'block' : 'none';
+  }
+});
+
+// ─── PARSE CLAUDE OUTPUT ──────────────────────────────────────────────────────
+function parseClaude() {
+  const text = document.getElementById('claude-paste').value;
+  const lines = text.split('\n');
+  const result = { gabi: {}, nacho: {} };
+
+  lines.forEach(line => {
+    const person = line.toLowerCase().startsWith('gabi') ? 'gabi' : line.toLowerCase().startsWith('nacho') ? 'nacho' : null;
+    if (!person) return;
+    const pairs = line.split('|').slice(1);
+    pairs.forEach(p => {
+      const [k, v] = p.split(':').map(s => s.trim());
+      if (!k || !v) return;
+      const key = k.toLowerCase().replace(/\s/g,'_').replace(/[^a-z0-9_]/g,'');
+      const num = parseFloat(v.replace(/[^\d.]/g,''));
+      if (!isNaN(num)) result[person][key] = num;
+    });
+  });
+
+  state.todayData = result;
+  alert('Parsed! Fill in activity below and hit Generate.');
+}
+
+// ─── CALCULATE ACTIVITY BURN ─────────────────────────────────────────────────
+function calcBurn(steps, gym, duration, intensity) {
+  let burn = 0;
+  burn += (steps || 0) * 0.04;
+  if (gym) {
+    const mults = { light: 5, moderate: 7, intense: 9 };
+    burn += (duration || 0) * (mults[intensity] || 7);
+  }
+  return Math.round(burn);
+}
+
+// ─── WEEKLY AVERAGE TDEE ADJUSTMENT ──────────────────────────────────────────
+function updateWeeklyAverage() {
+  const recent = state.history.slice(-7);
+  if (recent.length === 0) return;
+  const avgSteps = recent.reduce((a,b) => a + (b.steps||0), 0) / recent.length;
+  const gymCount = recent.filter(d => d.gym).length;
+  state.weeklyActivity = { avgSteps, gymPerWeek: gymCount };
+}
+
+function getTomorrowTarget(basePerson) {
+  const base = state.mission[basePerson].kcal;
+  const { avgSteps, gymPerWeek } = state.weeklyActivity;
+  if (!avgSteps) return base;
+  let adj = 0;
+  if (avgSteps > 10000) adj += 80;
+  else if (avgSteps < 5000) adj -= 80;
+  if (gymPerWeek >= 3) adj += 100;
+  else if (gymPerWeek < 1) adj -= 50;
+  return Math.round(base + adj);
+}
+
+// ─── GENERATE LOG ─────────────────────────────────────────────────────────────
+function generateLog() {
+  const steps = parseInt(document.getElementById('steps').value) || 0;
+  const sleep = parseFloat(document.getElementById('sleep').value) || 0;
+  const gym = document.getElementById('gym-check').checked;
+  const gymDur = parseInt(document.getElementById('gym-duration').value) || 0;
+  const gymInt = document.getElementById('gym-intensity').value;
+  const gabiAlcohol = parseFloat(document.getElementById('gabi-alcohol').value) || 0;
+  const gabiHypo = parseInt(document.getElementById('gabi-hypo').value) || 0;
+
+  const burn = calcBurn(steps, gym, gymDur, gymInt);
+  const alcoholKcal = gabiAlcohol * 125;
+  const hypoKcal = gabiHypo * 135;
+
+  const gm = state.mission.gabi;
+  const nm = state.mission.nacho;
+  const gd = state.todayData.gabi || {};
+  const nd = state.todayData.nacho || {};
+
+  const gConsumed = (gd.calories || 0) + alcoholKcal + hypoKcal;
+  const nConsumed = nd.calories || 0;
+
+  const gTarget = gm.kcal;
+  const nTarget = nm.kcal;
+
+  const gDelta = gConsumed - (gTarget + burn);
+  const nDelta = nConsumed - (nTarget + burn);
+
+  const tomorrowG = getTomorrowTarget('gabi');
+  const tomorrowN = getTomorrowTarget('nacho');
+
+  // Build display
+  document.getElementById('gabi-target-display').textContent = `Target: ${gTarget} kcal`;
+  document.getElementById('nacho-target-display').textContent = `Target: ${nTarget} kcal`;
+
+  renderMetrics('gabi-metrics', gd, gConsumed, gTarget, burn, gDelta, gm, gabiAlcohol, gabiHypo);
+  renderMetrics('nacho-metrics', nd, nConsumed, nTarget, burn, nDelta, nm, 0, 0);
+
+  // Tomorrow targets
+  document.getElementById('tomorrow-targets').innerHTML = `
+    <div class="tomorrow-target">
+      <div class="tomorrow-label">Tomorrow's targets</div>
+      <div style="display:flex; justify-content:space-around; margin-top:8px">
+        <div>
+          <div class="tomorrow-name" style="color:var(--gabi)">Gabi</div>
+          <div class="tomorrow-kcal" style="color:var(--gabi)">${tomorrowG}</div>
+          <div class="tomorrow-name">kcal</div>
+        </div>
+        <div style="border-left:1px solid var(--clay)"></div>
+        <div>
+          <div class="tomorrow-name" style="color:var(--nacho)">Nacho</div>
+          <div class="tomorrow-kcal" style="color:var(--nacho)">${tomorrowN}</div>
+          <div class="tomorrow-name">kcal</div>
+        </div>
+      </div>
+      <div style="font-size:10px; color:var(--mist); margin-top:8px; font-family:'JetBrains Mono',monospace">Based on this week's activity average</div>
+    </div>
+  `;
+
+  // Build CSV row
+  const date = new Date().toISOString().split('T')[0];
+  const csvG = buildCSVRow(date, 'Gabi', sleep, gd, gConsumed, gTarget, burn, gDelta, steps, gym, gymDur, gymInt, gabiAlcohol, gabiHypo, tomorrowG);
+  const csvN = buildCSVRow(date, 'Nacho', sleep, nd, nConsumed, nTarget, burn, nDelta, steps, gym, gymDur, gymInt, 0, 0, tomorrowN);
+
+  document.getElementById('csv-output').textContent = csvG + '\n' + csvN;
+  document.getElementById('csv-output-box').style.display = 'block';
+
+  // Save to history
+  const entry = { date, steps, sleep, gym, gymDur, gymInt, gabiAlcohol, gabiHypo, gConsumed, nConsumed, gDelta, nDelta, tomorrowG, tomorrowN, csvG, csvN };
+  const existing = state.history.findIndex(h => h.date === date);
+  if (existing >= 0) state.history[existing] = entry;
+  else state.history.push(entry);
+
+  updateWeeklyAverage();
+  saveState();
+  renderHistory();
+
+  document.getElementById('today-summary').style.display = 'block';
+  document.getElementById('input-form').style.display = 'none';
+}
+
+function renderMetrics(containerId, data, consumed, target, burn, delta, mission, alcohol, hypo) {
+  const sign = delta > 0 ? '+' : '';
+  const cls = delta > 150 ? 'bad' : delta < -300 ? 'warn' : 'good';
+  const pct = Math.min(100, Math.round((consumed / (target + burn)) * 100));
+
+  const row = (label, val, unit, target, cls) => {
+    const tgt = target ? ` / ${target}${unit}` : '';
+    return `<div class="metric-row"><span class="metric-label">${label}</span><span class="metric-value ${cls||'neutral'}">${val}${unit}${tgt}</span></div>`;
+  };
+
+  let html = '';
+  html += row('Calories', consumed, ' kcal', target + burn, cls);
+  html += `<div class="delta-bar"><div class="delta-fill" style="width:${pct}%; background:${delta > 150 ? 'var(--terracotta)' : delta < -300 ? 'var(--ochre)' : 'var(--sage)'}"></div></div>`;
+  html += `<div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:${delta > 0 ? 'var(--terracotta)' : 'var(--sage)'}; margin: 4px 0 10px; text-align:right">${sign}${delta} kcal vs target</div>`;
+  html += row('Protein', data.protein_g||data.protein||0, 'g', mission.protein, (data.protein_g||data.protein||0) >= mission.protein ? 'good' : 'warn');
+  html += row('Carbs', data.carbs_g||data.carbs||0, 'g', mission.carbs, 'neutral');
+  html += row('Fat', data.fat_g||data.fat||0, 'g', mission.fat, 'neutral');
+  html += row('Fibre', data.fibre_g||data.fibre||0, 'g', '', 'neutral');
+  if (alcohol > 0) html += row('Alcohol', alcohol, ' glasses', '', 'warn');
+  if (hypo > 0) html += row('Hypo corrections', hypo, '', '', 'warn');
+  html += `<div style="height:8px"></div>`;
+  html += row('Magnesium', data.magnesium_mg||data.magnesium||0, 'mg', '', 'neutral');
+  html += row('Vitamin D', data.vitd_mcg||data.vitd||0, 'mcg', '', 'neutral');
+  html += row('Iron', data.iron_mg||data.iron||0, 'mg', '', 'neutral');
+  html += row('Calcium', data.calcium_mg||data.calcium||0, 'mg', '', 'neutral');
+  html += row('Zinc', data.zinc_mg||data.zinc||0, 'mg', '', 'neutral');
+  html += row('B12', data.b12_mcg||data.b12||0, 'mcg', '', 'neutral');
+  html += row('Omega-3', data.omega3_g||data.omega3||0, 'g', '', 'neutral');
+  html += row('Burned (est)', burn, ' kcal', '', 'neutral');
+
+  document.getElementById(containerId).innerHTML = html;
+}
+
+function buildCSVRow(date, person, sleep, data, consumed, target, burn, delta, steps, gym, gymDur, gymInt, alcohol, hypo, tomorrow) {
+  const g = (k) => data[k] || data[k.replace('_g','').replace('_mg','').replace('_mcg','')] || 0;
+  return [date, person, sleep, consumed, target, delta, g('protein_g'), g('carbs_g'), g('netcarbs_g')||g('net_carbs'), g('fat_g'), g('fibre_g'), g('magnesium_mg'), g('vitd_mcg'), g('iron_mg'), g('calcium_mg'), g('zinc_mg'), g('b12_mcg'), g('omega3_g'), g('potassium_mg'), g('vitc_mg'), g('folate_mcg'), steps, gym?'Y':'N', gymDur, gymInt, burn, consumed-(target+burn), alcohol, hypo, tomorrow].join(',');
+}
+
+// ─── HISTORY ──────────────────────────────────────────────────────────────────
+function renderHistory() {
+  const el = document.getElementById('history-list');
+  if (state.history.length === 0) {
+    el.innerHTML = '<div style="color:var(--mist); font-size:13px; text-align:center; padding:30px 0">No entries yet. Start logging today.</div>';
+    return;
+  }
+  el.innerHTML = [...state.history].reverse().map(h => `
+    <div class="history-row">
+      <div class="history-date">${h.date}</div>
+      <div class="history-data">
+        Gabi: ${h.gConsumed} kcal (${h.gDelta > 0 ? '+' : ''}${h.gDelta})<br>
+        Nacho: ${h.nConsumed} kcal (${h.nDelta > 0 ? '+' : ''}${h.nDelta})<br>
+        Steps: ${h.steps} · Sleep: ${h.sleep}h · Gym: ${h.gym ? h.gymDur+'min '+h.gymInt : 'rest'}
+      </div>
+    </div>
+  `).join('');
+}
+
+// ─── EXPORT CSV ───────────────────────────────────────────────────────────────
+function exportFullCSV() {
+  const header = 'Date,Person,Sleep_hrs,Kcal_consumed,Kcal_target,Kcal_delta,Protein_g,Carbs_g,NetCarbs_g,Fat_g,Fibre_g,Magnesium_mg,VitD_mcg,Iron_mg,Calcium_mg,Zinc_mg,B12_mcg,Omega3_g,Potassium_mg,VitC_mg,Folate_mcg,Steps,Gym_yn,Gym_mins,Gym_intensity,Kcal_burned_est,Net_balance,Alcohol_units,Hypo_corrections,Tomorrow_kcal_target';
+  const rows = state.history.map(h => h.csvG + '\n' + h.csvN).join('\n');
+  const csv = header + '\n' + rows;
+  const blob = new Blob([csv], {type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'la-salud-' + new Date().toISOString().split('T')[0] + '.csv';
+  a.click();
+}
+
+function clearHistory() {
+  if (confirm('Clear all history? This cannot be undone.')) {
+    state.history = [];
+    saveState();
+    renderHistory();
+  }
+}
+
+// ─── COPY ─────────────────────────────────────────────────────────────────────
+function copyCSV() {
+  navigator.clipboard.writeText(document.getElementById('csv-output').textContent);
+  alert('Copied!');
+}
+
+function copyPrompt(n) {
+  const boxes = document.querySelectorAll('.prompt-box');
+  navigator.clipboard.writeText(boxes[n-1].textContent);
+  alert('Prompt ' + n + ' copied!');
+}
+
+// ─── MISSION ──────────────────────────────────────────────────────────────────
+function loadMissionFields() {
+  const g = state.mission.gabi;
+  const n = state.mission.nacho;
+  document.getElementById('g-weight').value = g.weight;
+  document.getElementById('g-height').value = g.height;
+  document.getElementById('g-age').value = g.age;
+  document.getElementById('g-goal3').value = g.goal3;
+  document.getElementById('g-goal6').value = g.goal6;
+  document.getElementById('g-kcal').value = g.kcal;
+  document.getElementById('g-protein').value = g.protein;
+  document.getElementById('g-carbs').value = g.carbs;
+  document.getElementById('g-fat').value = g.fat;
+  document.getElementById('n-weight').value = n.weight;
+  document.getElementById('n-height').value = n.height;
+  document.getElementById('n-age').value = n.age;
+  document.getElementById('n-goal3').value = n.goal3;
+  document.getElementById('n-goal6').value = n.goal6;
+  document.getElementById('n-kcal').value = n.kcal;
+  document.getElementById('n-protein').value = n.protein;
+  document.getElementById('n-carbs').value = n.carbs;
+  document.getElementById('n-fat').value = n.fat;
+}
+
+function saveMission() {
+  state.mission.gabi = {
+    weight: parseFloat(document.getElementById('g-weight').value) || 70,
+    height: parseFloat(document.getElementById('g-height').value) || 165,
+    age: parseInt(document.getElementById('g-age').value) || 29,
+    goal3: document.getElementById('g-goal3').value,
+    goal6: document.getElementById('g-goal6').value,
+    kcal: parseInt(document.getElementById('g-kcal').value) || 1450,
+    protein: parseInt(document.getElementById('g-protein').value) || 100,
+    carbs: parseInt(document.getElementById('g-carbs').value) || 130,
+    fat: parseInt(document.getElementById('g-fat').value) || 45,
+  };
+  state.mission.nacho = {
+    weight: parseFloat(document.getElementById('n-weight').value) || 71,
+    height: parseFloat(document.getElementById('n-height').value) || 172,
+    age: parseInt(document.getElementById('n-age').value) || 30,
+    goal3: document.getElementById('n-goal3').value,
+    goal6: document.getElementById('n-goal6').value,
+    kcal: parseInt(document.getElementById('n-kcal').value) || 1950,
+    protein: parseInt(document.getElementById('n-protein').value) || 145,
+    carbs: parseInt(document.getElementById('n-carbs').value) || 175,
+    fat: parseInt(document.getElementById('n-fat').value) || 55,
+  };
+  saveState();
+  document.getElementById('mission-saved').style.display = 'block';
+  setTimeout(() => document.getElementById('mission-saved').style.display = 'none', 2000);
+}
+
+init();
+</script>
+</body>
+</html>

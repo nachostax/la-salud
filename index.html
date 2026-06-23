@@ -3546,7 +3546,7 @@ function buildAIAssistBundle(closingInstruction) {
     ? `\n\nFULL DATA (CSV — every logged meal, workout, and weight entry):\n${buildFullCSV()}`
     : `\n\n(No meals or workouts have been logged yet — this is the start of the journey, or the app has just been set up.)`;
 
-  return `Hi. I'm going to give you full context about me and my partner so you can help us with our health and nutrition. We're a couple based in Valencia, Spain. We track what we eat and how we move using an app called La Salud — I'm pasting everything it knows about us below so you're fully up to speed. Then I'll tell you what I need help with.
+  return `Hi. You are a nutritionist professional as well as personal trainer with many many decades of experience helping couples achieve their physical goals. I'm going to give you full context about me and my partner so you can help us with our health and nutrition. We're a couple based in Valencia, Spain. We track what we eat and how we move using an app called La Salud — I'm pasting everything it knows about us below so you're fully up to speed. Then I'll tell you what I need help with.
 
 WHO WE ARE:
 - Gabi: female, Type 1 diabetic, ${g.age||'?'} years old, ${g.height||'?'}cm, current weight: ${weightSummary('gabi')}
@@ -3557,8 +3557,8 @@ OUR GOALS (next 3 months — these drive our daily calorie targets):
 - Nacho: ${fmtGoal(n.goal3kg)} | 1-year target weight: ~${n.goal1yWeight||'?'}kg (motivational only)
 
 OUR DAILY CALORIE & MACRO TARGETS:
-- Gabi: ${g.kcal||'?'} kcal | Protein ${g.protein||'?'}g | Carbs ${g.carbs||'?'}g | Fat ${g.fat||'?'}g
-- Nacho: ${n.kcal||'?'} kcal | Protein ${n.protein||'?'}g | Carbs ${n.carbs||'?'}g | Fat ${n.fat||'?'}g
+- Gabi: ${g.kcal||'?'} kcal | Protein ${g.protein||'?'}g | Carbs ${g.carbs||'?'}g | Fat ${g.fat||'?'}g | Magnesium ${g.magnesium_mg||'?'}mg | VitD ${g.vitd_mcg||'?'}mcg | Iron ${g.iron_mg||'?'}mg | Calcium ${g.calcium_mg||'?'}mg | Zinc ${g.zinc_mg||'?'}mg | B12 ${g.b12_mcg||'?'}mcg | Omega3 ${g.omega3_g||'?'}g | Potassium ${g.potassium_mg||'?'}mg | VitC ${g.vitc_mg||'?'}mg | Folate ${g.folate_mcg||'?'}mcg
+- Nacho: ${n.kcal||'?'} kcal | Protein ${n.protein||'?'}g | Carbs ${n.carbs||'?'}g | Fat ${n.fat||'?'}g | Magnesium ${n.magnesium_mg||'?'}mg | VitD ${n.vitd_mcg||'?'}mcg | Iron ${n.iron_mg||'?'}mg | Calcium ${n.calcium_mg||'?'}mg | Zinc ${n.zinc_mg||'?'}mg | B12 ${n.b12_mcg||'?'}mcg | Omega3 ${n.omega3_g||'?'}g | Potassium ${n.potassium_mg||'?'}mg | VitC ${n.vitc_mg||'?'}mg | Folate ${n.folate_mcg||'?'}mcg
 
 HOW WE'RE TRACKING (recent summary from logged data):
 - Gabi: ${kcalSummary('gabi')}
@@ -3566,11 +3566,11 @@ HOW WE'RE TRACKING (recent summary from logged data):
 
 THINGS TO KNOW ABOUT US:
 - Gabi has Type 1 diabetes. She tracks net carbs. Any hypo corrections (fast sugar + slow carb taken for a low blood-sugar episode) are logged in the data as Hypo_correction=Y — these are medical, not food choices, and are excluded from her calorie targets. Do not treat them as overeating.
-- We shop mostly at Mercadona. When suggesting specific foods or a meal plan, keep that in mind.
-- We eat a standard breakfast most days: 3 eggs, toast, tomato, spinach, olive oil, coffee with milk. Nacho adds honey to his coffee. If you suggest changes to breakfast, make sure they're realistic given this baseline.
-- If the data below is incomplete for a given day, that means we didn't log everything — not that we didn't eat. Never assume a low-calorie day means a deficit; it means partial logging. Only draw conclusions from days where Full_day_logged=Y.
-- Nacho's priority is protecting muscle while losing fat gradually. Gabi should never go below 1200 kcal net.
-- We're open to conversations about anything: what to eat this week, how to improve our system, weekly meal plans, what to buy, how to optimise macros — whatever is most useful.
+- We shop mostly at Mercadona, specifically in Malvarrosa. When suggesting specific foods or a meal plan, keep that in mind.
+- We have coffee with milk in the morning. Nacho adds honey to his coffee.
+- If the data below is incomplete for a given day, that means we didn't log everything — not that we didn't eat. Never assume a low-calorie day means a deficit; it means partial logging. Only draw conclusions from days where Full_day_logged=Y. If a day is ticked as fully logged assume it is.
+- Nacho's priority is protecting muscle while losing fat gradually. Gabi's goal is to lose weight. (She feels ashamed of her body, and you can notice her belly gorwing overtime, not shrinking. Don't mention her appearance in your answer though. She should never go below 1200 kcal net.
+- We're open to conversations about anything: what to eat this week, how to improve our system, weekly meal plans, what to buy, how to optimise macros — whatever is most useful, what you can see about our full nutrition, workout patterns.
 
 ${closingInstruction || `Once you've read this, check in with us: briefly say what you can see in the data (or acknowledge it's early days if there isn't much), then ask what we'd like help with today.`}${dataSection}`;
 }
@@ -3591,7 +3591,7 @@ function exportAIAssistFile() {
 }
 
 // ── NATIVE AI ASSIST (one-shot comprehensive advice) ───────────────────────
-const AI_ASSIST_ONESHOT_INSTRUCTION = `Give us one comprehensive check-in now — don't ask a question first. Cover: what you notice in the data (or that it's early days if there's little logged yet), what to eat more of and less of, and what to prioritise next. Be direct and specific (e.g. "eat more fish, less X"), a few short paragraphs, no follow-up question at the end.`;
+const AI_ASSIST_ONESHOT_INSTRUCTION = `Give us one comprehensive check-in now — don't ask a question first. Cover: what you notice in the data (macros + micronutrients), what to eat more of and less of, workout deficiencies, and what to prioritise next. Be direct and specific (e.g. "eat more fish, less X"), a few short paragraphs, no follow-up question at the end.`;
 
 let lastAIAssistExchange = null; // { prompt, reply } — for "continue elsewhere"
 

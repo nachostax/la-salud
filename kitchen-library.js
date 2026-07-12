@@ -129,12 +129,61 @@ function _kitchenSeededShuffle(arr, seed) {
   return a;
 }
 
+// ── DESSERT DETECTION ── used to keep desserts out of the curated shelves
+// below. Category alone ("Dessert") is the reliable signal (human-curated
+// at import time), but a dessert with real protein in it (a cheesecake,
+// a nut tart, a custard with actual eggs/dairy behind it) isn't the thing
+// worth filtering — it behaves like food, not a sugar bomb. So: only items
+// tagged Dessert are even considered, and among those we let a genuinely
+// protein-forward one back in via a protein/carbs ratio check. Ratio alone
+// (no category gate) was tried and rejected — it also flagged plenty of
+// ordinary high-carb savory dishes (rice bowls, pasta, casseroles) as
+// "dessert-like" purely for having more carbs than protein, which is just
+// what a lot of real dinners look like. Gating on category first avoids
+// that false-positive flood while still respecting the "some desserts are
+// fine" case.
+function _kitchenIsDessertLike(m) {
+  if (m.category !== 'Dessert') return false;
+  const carbs = m.carbs_g || 0;
+  const protein = m.protein_g || 0;
+  if (carbs < 10) return protein < 5; // negligible-carb "dessert" — still exclude unless it has real protein
+  return (protein / carbs) < 0.3;
+}
+
+// ── GOAL-AWARE POOL ── narrows the library to what actually fits the
+// person's current goalType (Settings > goal) before shelves pick from it.
+// "Lose fat" wants satiating-but-lighter meals; "recomposition" wants
+// protein first without a hard calorie ceiling (it's eaten at maintenance,
+// not a deficit); "gain muscle"/"gain weight" want calorie-and-protein-dense
+// meals to make hitting a surplus easier. Unrecognized/missing goalType
+// falls back to the unfiltered pool. If a goal filter is too narrow to fill
+// a shelf (fewer than 40 matches), we fall back to the full pool rather
+// than repeating the same handful of meals every day.
+function _kitchenGoalFilteredPool(pool, goalType) {
+  let filtered;
+  if (goalType === 'lose_fat') {
+    filtered = pool.filter(m => m.kcal <= 650 && m.protein_g >= 20);
+  } else if (goalType === 'recomposition') {
+    filtered = pool.filter(m => m.protein_g >= 30);
+  } else if (goalType === 'gain_muscle' || goalType === 'gain_weight') {
+    filtered = pool.filter(m => m.protein_g >= 25 && m.kcal >= 600);
+  } else {
+    filtered = pool;
+  }
+  return filtered.length >= 40 ? filtered : pool;
+}
+
 // Suggested For You — a stable-per-day, varied-by-diet_tag rotation across
-// the whole library. Your call per §1 of the overhaul prompt; picked
-// "rotating pool, varied by diet" over a fixed hand-picked set since the
-// library will keep changing as enrichment continues.
+// the whole library, narrowed first by the active person's goal and with
+// desserts filtered out per _kitchenIsDessertLike above. Rotates daily via
+// _kitchenDaySeed so the shelf isn't static, but doesn't reshuffle on every
+// render/tab-switch within the same day.
 function suggestedForYouMeals(count = 18) {
-  const shuffled = _kitchenSeededShuffle(MEAL_LIBRARY, _kitchenDaySeed());
+  const mission = (window.S && S.mission && S.mission[S.currentPerson]) || {};
+  const goalType = mission.goalType || 'lose_fat';
+  const nonDessert = MEAL_LIBRARY.filter(m => !_kitchenIsDessertLike(m));
+  const pool = _kitchenGoalFilteredPool(nonDessert, goalType);
+  const shuffled = _kitchenSeededShuffle(pool, _kitchenDaySeed());
   const seenDiet = {};
   const picked = [], rest = [];
   for (const m of shuffled) {
@@ -148,17 +197,16 @@ function suggestedForYouMeals(count = 18) {
 }
 
 function postWorkoutMeals(count = 18) {
-  return KITCHEN_PROTEIN_BANDS.find(b => b.key === 'high').test
-    ? MEAL_LIBRARY.filter(m => m.protein_g >= 30).sort((a, b) => b.protein_g - a.protein_g).slice(0, count)
-    : [];
+  return MEAL_LIBRARY.filter(m => !_kitchenIsDessertLike(m) && m.protein_g >= 30)
+    .sort((a, b) => b.protein_g - a.protein_g).slice(0, count);
 }
 
 function under15MinuteMeals(count = 18) {
-  return _kitchenSeededShuffle(MEAL_LIBRARY.filter(m => m.prep_minutes <= 15), _kitchenDaySeed() + 1).slice(0, count);
+  return _kitchenSeededShuffle(MEAL_LIBRARY.filter(m => !_kitchenIsDessertLike(m) && m.prep_minutes <= 15), _kitchenDaySeed() + 1).slice(0, count);
 }
 
 function weightLossFriendlyMeals(count = 18) {
-  return MEAL_LIBRARY.filter(m => m.kcal <= 500).sort((a, b) => a.kcal - b.kcal).slice(0, count);
+  return MEAL_LIBRARY.filter(m => !_kitchenIsDessertLike(m) && m.kcal <= 500).sort((a, b) => a.kcal - b.kcal).slice(0, count);
 }
 
 const KITCHEN_SHELVES = [

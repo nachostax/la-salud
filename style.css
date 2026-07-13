@@ -1857,11 +1857,14 @@ textarea::placeholder { color:var(--clay); }/* ── BUTTONS ── */
   text-transform:none;letter-spacing:0;
 }
 input[type="number"],input[type="text"],input[type="password"],select {
-  width:100%;background:var(--soil);
+  width:100%;background:var(--soil);background-color:var(--soil);background-image:none;
   border:1px solid var(--clay);border-radius:10px;
   color:var(--bone);font-family:'Baloo 2',sans-serif;
-  font-size:14px;padding:9px 11px;
+  font-size:14px;line-height:1.3;padding:9px 11px;box-shadow:none;
+  -webkit-appearance:none;appearance:none;color-scheme:dark;
 }
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button { -webkit-appearance:none;margin:0; }
 input:focus,select:focus { outline:none;border-color:var(--ochre); }
 select option { background:var(--bark); }
 
@@ -2323,7 +2326,7 @@ select option { background:var(--bark); }
 .wo-escape-row span { font-size:12px; color:var(--mist); text-decoration:underline; text-decoration-color:var(--clay); cursor:pointer; }
 .wo-escape-row span:hover { color:var(--ochre); }
 
-.wo-program-card { background:var(--soil); border:1px solid var(--clay); border-radius:12px; padding:12px; margin-bottom:8px; }
+.wo-program-card { background:var(--soil); border:1px solid var(--clay); border-radius:12px; padding:12px; margin-bottom:8px; cursor:pointer; }
 .wo-program-name { font-family:'Baloo 2',sans-serif; font-size:15px; font-weight:600; color:var(--bone); margin-bottom:2px; }
 .wo-program-meta { font-size:12px; color:var(--mist); margin-bottom:8px; }
 
@@ -2480,16 +2483,25 @@ select option { background:var(--bark); }
 .wo-pl-row-top .wo-pl-skip-ex-link { flex-shrink: 0; }
 .wo-pl-set-label { font-size: 12px; font-weight: 400; color: #7fb3e0; }
 .wo-pl-last { font-size: 10px; color: var(--mist); margin-bottom: 3px; }
-.wo-pl-targets-label { font-size: 10px; color: var(--mist); opacity: 0.7; margin-bottom: 2px; }
+.wo-pl-targets-label { font-size: 13px; color: var(--bone); opacity: 0.85; margin-bottom: 2px; }
 .wo-pl-inputs { display: flex; align-items: flex-end; gap: 6px; }
 .wo-pl-input-group { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
-.wo-pl-input-target { font-size: 10px; color: var(--mist); text-align: center; opacity: 0.7; min-height: 12px; }
-.wo-pl-input {
-  width: 100%; min-width: 0; background: var(--soil); border: 1px solid var(--clay); border-radius: 8px;
-  color: var(--bone); font-family: 'Baloo 2', sans-serif; font-size: 13px;
-  padding: 4px 6px; text-align: center;
+.wo-pl-input-target { font-size: 13px; color: var(--bone); text-align: center; opacity: 0.85; min-height: 16px; }
+.wo-pl-input-group .wo-pl-input {
+  width: 100%; min-width: 0; box-sizing: border-box;
+  background-color: var(--soil) !important; background-image: none;
+  border: 1px solid var(--clay); border-radius: 8px;
+  font: 13px/1.3 'Baloo 2', sans-serif; color: var(--mist); letter-spacing: normal;
+  padding: 10px 6px; text-align: center; box-shadow: none;
+  -webkit-appearance: none; appearance: none;
 }
-.wo-pl-input:focus { outline: none; border-color: var(--ochre); }
+.wo-pl-input-group input.wo-pl-input:not(:placeholder-shown) { color: var(--bone); }
+.wo-pl-input-group .wo-pl-input:focus { outline: none; border-color: var(--ochre); }
+.wo-pl-input-group .wo-pl-input::-webkit-inner-spin-button,
+.wo-pl-input-group .wo-pl-input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+.wo-pl-input-group .wo-pl-input::placeholder { color: var(--mist); opacity: 1; }
+.wo-pl-input-group .wo-pl-input span.wo-pl-level-touched { color: var(--bone); }
+.wo-pl-input-group .wo-pl-input span:not(.wo-pl-level-touched) { color: var(--mist); }
 .wo-pl-check {
   flex-shrink: 0; width: 30px; height: 30px; border-radius: 50%;
   border: 2px solid var(--clay); background: var(--soil);
@@ -2520,7 +2532,7 @@ select option { background:var(--bark); }
 .wo-pl-stretch-mode-opt.active { background: var(--ochre); color: var(--soil); font-weight: 600; }
 
 /* ── HERO — current-exercise reference pics pinned at the top ── */
-.wo-pl-hero { position: relative; margin-top: 4px; display: flex; gap: 4px; justify-content: center; }
+.wo-pl-hero { position: relative; margin-top: 4px; display: flex; gap: 4px; justify-content: center; transition: filter .4s ease; }
 .wo-pl-hero-img { width: 57.5vw; max-width: 207px; aspect-ratio: 1 / 1; height: auto; object-fit: cover; border-radius: 8px; display: block; background: var(--soil); }
 .wo-pl-hero-name {
   position: absolute; left: 0; right: 0; bottom: 0;
@@ -2573,15 +2585,15 @@ select option { background:var(--bark); }
      row list slide smoothly into place instead of snapping the instant a
      rest timer starts or ends.
    - .wo-bigtimer-donut-wrap: the ring, positioned absolutely so it never
-     factors into that height animation. Its bottom edge is meant to land
-     inside the .wo-bigtimer-top row — roughly level with the Rest label
-     and Skip Rest button, with margin either side — not further down
-     into the row list, and not so far up that it floats disconnected
-     over the hero picture with nothing anchoring it to the bar. */
+     factors into that height animation. It's deliberately oversized and
+     pulled up so it sits roughly centered over the hero photo pair above
+     it (see --donut-overlap) rather than just grazing the bottom edge —
+     the hero photos get blurred/darkened behind it (via :has() below) so
+     the timer reads as the clear focal point the moment it appears. */
 .wo-bigtimer {
   flex-shrink: 0; position: relative; z-index: 5;
-  --donut-d: clamp(76px, 20vw, 92px);
-  --donut-overlap: 24px;
+  --donut-d: clamp(128px, 36vw, 172px);
+  --donut-overlap: 96px;
 }
 .wo-bigtimer-collapse {
   display: grid; grid-template-rows: 0fr;
@@ -2613,39 +2625,32 @@ select option { background:var(--bark); }
 .wo-bigtimer-clockspacer { flex-shrink: 0; width: var(--donut-d); }
 
 /* ── DONUT RING — a floating badge, not boxed into the bar ──
-   Anchored with a fixed downward overlap past the header/hero boundary
-   (bottom: calc(-1 * var(--donut-overlap))) so its bottom edge lands
-   inside the top row, between the Rest label and Skip Rest button, with
-   margin to spare — never as far down as the row list below.
+   Anchored with a fixed upward overlap past the header/hero boundary
+   (bottom: var(--donut-overlap)) so it rises up to roughly the vertical
+   center of the hero photos above it, big enough to be the clear focal
+   point rather than a small badge peeking over the edge.
    Enter/exit is a vertical slide rather than a scale: it rests at
    translateY(0), and animates from/to a translateY offset that reads as
    "tucked in below" — sliding up into place when it appears, sliding
    back down out of sight when it's dismissed. */
 .wo-bigtimer-donut-wrap {
-  position: absolute; left: 50%; bottom: calc(-1 * var(--donut-overlap));
-  transform: translateX(-50%) translateY(38px);
+  position: absolute; left: 50%; bottom: var(--donut-overlap);
+  transform: translateX(-50%) translateY(56px);
   width: var(--donut-d); opacity: 0;
-  transition: transform .4s cubic-bezier(.34, 1.56, .64, 1), opacity .3s ease;
+  transition: transform .45s cubic-bezier(.34, 1.56, .64, 1), opacity .35s ease;
   pointer-events: none;
 }
 .wo-bigtimer.wo-bigtimer-active .wo-bigtimer-donut-wrap {
   transform: translateX(-50%) translateY(0); opacity: 1; pointer-events: auto;
 }
-/* Thin cap in the same color as the bar, curving down into the ring's
-   upper half — a carriage-mantle-clock shoulder. Built as a full ellipse
-   (rounded on every side, not just the top) so there's no flat edge or
-   square corner where it used to stop abruptly; the whole perimeter
-   tapers, and the ring drawn on top hides the lower half of the ellipse,
-   leaving just a thin curved brow that reads as continuous with the
-   ring's own curve rather than a slab dropped on top of it. */
-.wo-bigtimer-collar {
-  position: absolute; left: 50%; top: -13px;
-  transform: translateX(-50%);
-  width: calc(var(--donut-d) + 6px);
-  height: 52px;
-  background: var(--bark); border-radius: 50%;
+/* Darkens/blurs the hero photos behind the badge for as long as it's
+   showing, so the timer reads as sitting in front of the picture rather
+   than just overlapping it. :has() lets the (earlier, in source order)
+   hero element react to the (later) timer's active state with no JS
+   coordination needed. */
+.wo-pl-hero:has(+ .wo-bigtimer.wo-bigtimer-active) {
+  filter: blur(9px) brightness(0.55);
 }
-.wo-bigtimer.paused .wo-bigtimer-collar { background: var(--clay); }
 .wo-bigtimer-donut {
   position: relative; width: 100%; aspect-ratio: 1 / 1;
   display: flex; align-items: center; justify-content: center;
@@ -2660,7 +2665,7 @@ select option { background:var(--bark); }
 .wo-bigtimer.paused .wo-bigtimer-donut::before { background: var(--clay); }
 .wo-bigtimer-donut-svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
 .wo-bigtimer-donut-track, .wo-bigtimer-donut-fill {
-  fill: none; stroke-width: 8;
+  fill: none; stroke-width: 11;
 }
 .wo-bigtimer-donut-track { stroke: var(--clay); }
 .wo-bigtimer-donut-fill {
@@ -2670,7 +2675,7 @@ select option { background:var(--bark); }
 }
 .wo-bigtimer.paused .wo-bigtimer-donut-fill { stroke: var(--mist); transition: none; }
 .wo-bigtimer-num {
-  position: relative; font-family: 'Baloo 2', sans-serif; font-weight: 700; font-size: 20px;
+  position: relative; font-family: 'Baloo 2', sans-serif; font-weight: 700; font-size: 34px;
   color: var(--ochre); line-height: 1;
 }
 .wo-bigtimer.paused .wo-bigtimer-num { color: var(--mist); }
@@ -2703,9 +2708,9 @@ select option { background:var(--bark); }
    size. */
 .wo-bigtimer-pausebtn {
   position: absolute; bottom: 2%; right: -6%; transform: translate(0, 0);
-  flex-shrink: 0; width: 30px; height: 30px; border-radius: 50%;
+  flex-shrink: 0; width: 38px; height: 38px; border-radius: 50%;
   border: 1px solid var(--clay); background: var(--bark); color: var(--bone);
-  font-size: 13px; line-height: 1; display: flex; align-items: center; justify-content: center;
+  font-size: 16px; line-height: 1; display: flex; align-items: center; justify-content: center;
   cursor: pointer; z-index: 1;
 }
 .wo-bigtimer-pausebtn:active { background: var(--clay); }
@@ -2830,6 +2835,42 @@ select option { background:var(--bark); }
 }
 .wo-search-input::placeholder { color: var(--mist); }
 .wo-search-input:focus { outline: none; border-color: var(--ochre); }
+
+/* ── Category grid (New Workout home, no search active) — 2x2 image tiles.
+   These classes were referenced by renderWorkoutCategoryGrid()/
+   renderWorkoutCategoryList() in workout.js but never defined here, so a
+   tile rendered as a bare <img> at its natural size with no grid, no crop,
+   and no label — the "fills the whole screen" bug. Fixed to a fixed-
+   aspect, cropped, 2-column grid matching the .meal-card image pattern
+   used elsewhere. ── */
+.wo-category-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 4px;
+}
+.wo-category-tile {
+  position: relative; width: 100%; aspect-ratio: 4 / 3; overflow: hidden;
+  border-radius: var(--pf-card-radius); background: var(--clay); cursor: pointer;
+}
+.wo-category-tile img {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block;
+}
+.wo-category-tile-fade {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.05) 55%, rgba(0,0,0,0) 75%);
+}
+.wo-category-tile-label {
+  position: absolute; left: 10px; bottom: 9px; right: 10px;
+  font-family: 'Baloo 2', sans-serif; font-size: 15px; font-weight: 600;
+  color: var(--bone); text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+}
+.wo-category-back {
+  font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.5px;
+  color: var(--ochre); cursor: pointer; margin-bottom: 12px;
+}
+.wo-category-section { margin-bottom: 18px; }
+.wo-category-section-title {
+  font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 1.5px;
+  color: var(--mist); text-transform: uppercase; margin-bottom: 6px;
+}
 
 /* ── Create Workout page layout — name/desc header and the Cancel/Save
    action bar stay fixed; only the middle (queue + search + exercise list)

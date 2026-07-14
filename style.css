@@ -1,0 +1,3883 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  /* ── GLOBAL — structural, shared by both people ── */
+  --pf-toggle-radius: 16px;
+  --pf-card-radius:   18px;
+
+  /* ── GLOBAL — value-dependent, fixed regardless of theme (status /
+     adherence / danger colors overrule theme by design — see Rule 3) ── */
+  --sage:       #7A9E7E;
+  --sage-rgb:   122,158,126;
+  --sage-dim:   rgba(122,158,126,0.15);
+  --terra:      #C4614A;
+  --terra-rgb:  196,97,74;
+  --terra-dim:  rgba(196,97,74,0.15);
+  --gabi-c:     #6BA3C8;   /* identity color — always Gabi's, regardless of active theme */
+  --nacho-c:    #C8863A;   /* identity color — always Nacho's, regardless of active theme */
+
+  --status-green:  #8CB98F;
+  --status-orange: #C89B6A;
+  --status-red:    #C47A6A;
+  --status-red-strong: #D8503A;
+
+  --adh-great:   #8FC7A0;
+  --adh-good:    #B7D9A8;
+  --adh-neutral: #C7C7C7;
+  --adh-warn:    #E0B678;
+  --adh-poor:    #E0917E;
+
+  --box-title: #D9C093;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   LAYER 2 — THEME (person-dependent color), part 1: root tokens.
+   Nacho and Gabi are equal, parallel blocks — neither is a "default"
+   read before the other. Every element must resolve its color through
+   whichever of these two blocks is active; nothing color-related
+   lives in :root above.
+   ══════════════════════════════════════════════════════════════════ */
+
+body.person-nacho {
+  /* Earth theme — placeholder until Earth Spud (charcoal grey +
+     foliage) is designed; today's warm brown/ochre is the interim
+     look, same status as Gabi's block below. */
+  --soil: #181510;
+  --bark: #252118;
+  --clay: #38322A;
+  --ochre: #C8863A;
+  --ochre-rgb: 200,134,58;
+  --ochre-dim: rgba(200,134,58,0.15);
+  --sand: #E8D5B0;
+  --bone: #F2EBE0;
+  --mist: #9A9080;
+
+  --pf-bg:            var(--soil);
+  --pf-text-primary:  var(--bone);
+  --pf-text-muted:    var(--mist);
+  --pf-accent-orange: var(--ochre);
+  --pf-accent-teal:   var(--sage);
+  --pf-accent-fat:    #8B6BC0;
+  --pf-divider:       var(--clay);
+  --pf-toggle-bg:     var(--bark);
+  --water-fill:       #4F8FBF; /* distinct blue so the water fill reads apart from the glass box, which shares --bark with the card */
+}
+
+
+
+body.person-gabi {
+  --pf-bg:            #0A1931;
+  --pf-text-primary:  #FFFFFF;
+  --pf-text-muted:    #8A96AE;
+  --pf-accent-orange: #FF8C00;
+  --pf-accent-teal:   #48D1CC;
+  --pf-accent-fat:    #8B7BD8;
+  --pf-divider:       rgba(255,255,255,0.08);
+  --pf-toggle-bg:      rgba(255,255,255,0.06);
+
+  /* Astro Night — same mapping already used ad hoc throughout the old
+     per-element leak patches below (.themed-soil-box, .calories-micro-
+     group/divider, the [style*="color:var(--X)"] patches). Making the
+     raw tokens themselves theme-aware means any remaining var(--ochre)/
+     var(--mist)/etc call site — including ones inside JS-written inline
+     styles — resolves correctly without needing its own patch. */
+  --soil:       #0B0F1A;   /* = --gabi-moon-deep */
+  --bark:       #111F3D;   /* = --gabi-moon-surf */
+  --clay:       #253047;   /* = --gabi-moon-edge */
+  --ochre:      #6BA3C8;   /* = --gabi-moon-bright — most common accent use;
+                               elements needing --gabi-moon-glow/-save
+                               specifically keep their own patch below,
+                               which still wins on specificity. */
+  --ochre-rgb:  107,163,200;
+  --ochre-dim:  rgba(107,163,200,0.15);
+  --sand:       #D4E8F4;   /* = --gabi-moon-ice */
+  --bone:       #D4E8F4;   /* = --gabi-moon-ice */
+  --mist:       #6B8099;   /* = --gabi-moon-mist */
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   LAYER 2 — THEME, part 2: every remaining person-scoped rule for
+   either person — still color/background/border only, never layout.
+   Add new per-person color here; nowhere else in this file should
+   contain "person-gabi" or "person-nacho".
+   ══════════════════════════════════════════════════════════════════ */
+
+body.person-gabi #main-header,
+body.person-gabi #person-subhdr,
+body.person-gabi #hdr-tab-row {
+  background: transparent !important;
+}
+
+body.person-gabi #main-header.scrolled,
+body.person-gabi #main-header.scrolled #person-subhdr,
+body.person-gabi #main-header.scrolled #hdr-tab-row {
+  background: var(--pf-bg) !important;
+}
+
+body.person-gabi {
+  background: #0A1931;
+}
+
+body.person-nacho {
+  background: #16120d;
+}
+
+body.person-nacho #person-tint { background: radial-gradient(circle at 50% 40%, rgba(var(--ochre-rgb),0.06) 0%, rgba(var(--ochre-rgb),0) 55%); }
+
+body.person-gabi  #person-tint { background: radial-gradient(circle at 50% 40%, rgba(160,185,210,0.07) 0%, rgba(160,185,210,0) 55%); }
+
+body.person-nacho #person-subhdr, body.person-nacho #hdr-tab-row { background:transparent; }
+
+body.person-gabi  #person-subhdr, body.person-gabi  #hdr-tab-row { background:var(--gabi-moon-mid, #111827); }
+
+/* Position only — WHICH side the thumb sits on is value-dependent
+   (whoever is active), not theme-dependent. Color is one rule below. */
+html.person-gabi  #person-subhdr .psh-pill::before,
+body.person-gabi  #person-subhdr .psh-pill::before { transform:translateX(0); }
+html.person-nacho #person-subhdr .psh-pill::before,
+body.person-nacho #person-subhdr .psh-pill::before { transform:translateX(100%); }
+
+#person-subhdr .psh-pill::before { background: var(--pf-accent-orange); }
+
+html.person-gabi  #person-subhdr .psh-pill-half[data-p="gabi"],
+body.person-gabi  #person-subhdr .psh-pill-half[data-p="gabi"],
+html.person-nacho #person-subhdr .psh-pill-half[data-p="nacho"],
+body.person-nacho #person-subhdr .psh-pill-half[data-p="nacho"] {
+  color: var(--pf-bg);
+  font-weight: 600;
+}
+
+body.person-gabi #person-subhdr .psh-pill {
+  background: var(--gabi-moon-surf);
+}
+
+/* Same component as the top psh-pill, just used in Settings — now
+   sharing the exact same tokens instead of its own color set. */
+.user-id-toggle.person-gabi,
+.user-id-toggle.person-nacho {
+  border-color: var(--pf-accent-orange);
+  background: var(--pf-toggle-bg);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.03);
+}
+
+.user-id-toggle .user-id-primary { color: var(--pf-accent-orange); }
+
+.user-id-toggle .user-id-pill { border-color: var(--pf-accent-orange); }
+
+.user-id-toggle .user-id-pill::before { background: var(--pf-accent-orange); }
+
+.user-id-toggle.person-gabi .user-id-pill::before  { transform:translateX(0); }
+.user-id-toggle.person-nacho .user-id-pill::before { transform:translateX(100%); }
+
+.user-id-toggle.person-gabi  .user-id-pill-half[data-p="gabi"],
+.user-id-toggle.person-nacho .user-id-pill-half[data-p="nacho"] {
+  color: var(--pf-bg);
+  font-weight: 600;
+}
+
+.calories-micro-group .day-card,
+.calories-micro-group .trend-card,
+body.person-gabi .calories-micro-group .day-card,
+body.person-gabi .calories-micro-group .trend-card {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  margin-bottom: 0;
+}
+
+body.person-gabi .calories-micro-group {
+  background: var(--gabi-moon-surf);
+  border-color: var(--gabi-moon-edge);
+}
+
+body.person-gabi .calories-micro-divider {
+  background: var(--gabi-moon-edge);
+}
+
+body.person-gabi #per-day.press-fx,
+body.person-gabi #per-week.press-fx,
+body.person-gabi #per-month.press-fx {
+  background: rgba(var(--gabi-moon-glow-rgb),0.35) !important;
+}
+
+/* prog-period-opt/indicator now use --pf-accent-orange directly —
+   already theme-correct for both, no per-person override needed. */
+
+
+/* wk-type-btn-primary folded into the unified wk-type-btn 8-color
+   table below — no longer a separate "more prominent" tier. */
+
+/* ── GABI MOON THEME — injected ──────────────────────── */
+/* ── CSS custom properties only visible when person=gabi ── */
+
+body.person-gabi {
+  --gabi-moon-deep:   #0B0F1A;
+  --gabi-moon-mid:    #111827;
+  --gabi-moon-surf:   #111F3D;
+  --gabi-moon-edge:   #253047;
+  --gabi-moon-glow:   #4A7FA5;
+  --gabi-moon-glow-rgb: 74,127,165;
+  --gabi-moon-bright: #6BA3C8;
+  --gabi-moon-bright-rgb: 107,163,200;
+  --gabi-moon-pale:   #A8C8E0;
+  --gabi-moon-ice:    #D4E8F4;
+  --gabi-moon-mist:   #6B8099;
+  --gabi-moon-ai:     #2563A8;
+  --gabi-moon-ai-hi:  #3B82C4;
+  --gabi-moon-save:   #1F5C8A;
+  --gabi-moon-save-hi:#2E74A8;
+
+  /* Step 3 — Gabi's gold-standard title colour switched from a cool
+     sandy variant to the bright icy blue-white already used for Gabi's
+     other prominent labels (--gabi-moon-ice), so it follows the blue
+     theme instead of reading as an off-theme warm tone. */
+  --box-title: #BFE0F0;
+}
+/* ── BACKGROUND ── */
+
+body.person-gabi {
+  background: #0A1931;
+}
+
+body.person-gabi #person-tint {
+  background: radial-gradient(circle at 50% 40%, rgba(var(--gabi-moon-glow-rgb),0.08) 0%, rgba(var(--gabi-moon-glow-rgb),0) 55%);
+}
+/* ── TOP NAV / MAIN HEADER ── */
+
+body.person-gabi #main-header {
+  background: #0e1320;
+  border-bottom-color: #1e2d42;
+}
+
+body.person-gabi #hdr-divider { background: #1e2d42; }
+
+body.person-gabi .bnav { background: #0e1320; border-top-color: #1e2d42; }
+
+body.person-gabi .bnav-tab { color: #4E6880; }
+
+body.person-gabi .bnav-tab.active { color: var(--gabi-moon-bright); }
+
+body.person-gabi .bnav-indicator { background: var(--gabi-moon-bright); }
+/* ── SECTION CHROME ── */
+
+body.person-gabi .sec-eyebrow { color: var(--gabi-moon-glow); }
+
+body.person-gabi .sec-title   { color: var(--gabi-moon-ice); }
+/* ── PERSON TOGGLE (user-id-toggle) ── */
+
+body.person-gabi .user-id-toggle-UNUSED {
+  background: linear-gradient(135deg, #131c2e 0%, #111827 65%);
+  border-color: var(--gabi-moon-glow);
+  box-shadow: 0 4px 16px rgba(74,127,165,0.18), 0 4px 14px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.04);
+}
+/* ── ALL SELECTED/ACTIVE TOGGLE STATES — one rule, matches the top G/N
+   pill exactly: solid accent-orange background, dark text. Covers
+   ptog, seg-opt, wk-type-btn.
+   :not(.pf-toggle-option) on the seg-opt line is deliberate — toggles
+   that have been migrated to the universal sliding-pill mechanism
+   (.seg.pf-toggle / .pf-toggle-slider, see below) paint their active
+   background on a separate slider element instead, and this rule's
+   higher specificity (body.person-gabi + 2 classes) was beating that
+   design on Gabi's profile: it repainted a second, static background
+   directly onto the option on top of the sliding one, which is what
+   caused Gabi's toggles to flash/double up on tap and to end up a
+   slightly different color than Nacho's. Un-migrated .seg-opt.active
+   toggles (no .pf-toggle-option class) still get this rule as before. ── */
+
+body.person-gabi .ptog.active-g,
+body.person-gabi .ptog.active-n,
+body.person-gabi .seg-opt.active:not(.pf-toggle-option),
+body.person-gabi .wk-type-btn.selected {
+  color: var(--pf-bg);
+  border-color: transparent;
+  background: var(--pf-accent-orange);
+}
+/* Unselected/inactive state for all of the above — already theme-aware
+   via --clay/--bark/--mist, no per-element override needed anymore. */
+
+/* ── DAY / HISTORY CARDS ── */
+
+body.person-gabi .day-card,
+body.person-gabi .step-block,
+body.person-gabi .streak-block,
+body.person-gabi .weight-log-block,
+body.person-gabi .mig-block,
+body.person-gabi .mission-block,
+body.person-gabi .restore-block,
+body.person-gabi .trend-card {
+  background: var(--gabi-moon-surf);
+}
+/* Standardised to the same dark blue as the Mission tab's input fields —
+   the bar track itself (not the coloured fill). */
+
+body.person-gabi .deficit-bar { background: var(--gabi-moon-mid); }
+
+body.person-gabi .trend-stat-row {
+  background: var(--gabi-moon-mid);
+}
+
+body.person-gabi .trend-stat:not(:last-child)::after {
+  background: var(--gabi-moon-edge);
+}
+
+body.person-gabi .donut-block { background: var(--gabi-moon-mid); }
+
+body.person-gabi .donut-gap-ring { background: var(--gabi-moon-mid); }
+
+/* wk-block now uses --bark directly — matches day-card, no override needed */
+
+
+body.person-gabi .donut-hole { background: var(--gabi-moon-surf); }
+
+body.person-gabi .pbd-bar-bg { background: var(--gabi-moon-mid); }
+
+body.person-gabi .pbd-section { color: var(--gabi-moon-bright) !important; }
+
+body.person-gabi .day-card-hdr  { border-bottom-color: var(--gabi-moon-edge); }
+
+body.person-gabi .hist-day-hdr  { background: var(--gabi-moon-surf); }
+
+body.person-gabi .hist-day-date { color: var(--gabi-moon-bright); }
+
+body.person-gabi .macro-row      { border-bottom-color: var(--gabi-moon-edge); }
+
+body.person-gabi .weight-hist-item { border-bottom-color: var(--gabi-moon-edge); }
+
+body.person-gabi .trend-micro-row  { border-bottom-color: var(--gabi-moon-edge); }
+
+body.person-gabi .div { background: var(--gabi-moon-edge); }
+
+body.person-gabi .edit-history-btn { background: rgba(var(--gabi-moon-glow-rgb),0.15); color: var(--gabi-moon-bright); border: 1.5px solid var(--gabi-moon-bright); font-weight: 700; }
+
+body.person-gabi .edit-history-btn:hover { background: rgba(var(--gabi-moon-glow-rgb),0.28); }
+
+body.person-gabi .step-num {
+  background: rgba(var(--gabi-moon-glow-rgb),0.15);
+  border-color: var(--gabi-moon-glow);
+  color: var(--gabi-moon-bright);
+}
+/* ── MISSION TITLE ── */
+
+body.person-gabi .mission-title { color: var(--gabi-moon-bright); }
+
+body.person-gabi .weight-log-title { color: var(--gabi-moon-bright); }
+
+body.person-gabi .mig-title { color: var(--gabi-moon-glow); }
+
+body.person-gabi .restore-title { color: var(--gabi-moon-bright) !important; }
+/* ── POTATES SCORE BREAKDOWN ARROW ── */
+
+body.person-gabi .pbd-arr.open::after { border-color: var(--gabi-moon-bright); }
+body.person-nacho .score-status-label { font-weight: 700; opacity: 1 !important; }
+
+body.person-gabi .pbd-pts      { color: var(--gabi-moon-bright); }
+
+body.person-gabi .potates-score-label { color: var(--gabi-moon-bright) !important; }
+/* ── INPUTS / TEXTAREAS / SELECTS ── */
+
+body.person-gabi input[type="number"],
+body.person-gabi input[type="text"],
+body.person-gabi input[type="password"],
+body.person-gabi select {
+  background: var(--gabi-moon-mid);
+  border-color: var(--gabi-moon-edge);
+  color: var(--gabi-moon-ice);
+}
+
+body.person-gabi input:focus,
+body.person-gabi select:focus  { border-color: var(--gabi-moon-glow); }
+
+body.person-gabi textarea {
+  background: var(--gabi-moon-mid);
+  border-color: var(--gabi-moon-edge);
+  color: var(--gabi-moon-ice);
+}
+
+body.person-gabi textarea:focus { border-color: var(--gabi-moon-glow); }
+/* AI Assist textarea — keep dashed border in blue */
+
+body.person-gabi #ai-assist-focus {
+  background: var(--gabi-moon-surf) !important;
+  border-color: rgba(var(--gabi-moon-glow-rgb),0.55) !important;
+  color: var(--gabi-moon-pale) !important;
+}
+/* Checkbox accent */
+
+body.person-gabi input[type="checkbox"] { accent-color: var(--gabi-moon-glow); }
+/* ── MEAL KCAL LABEL ── */
+
+body.person-gabi .meal-kcal { color: var(--gabi-moon-bright); }
+/* ── AI ASSIST SECTION LABEL ── */
+
+body.person-gabi .restore-block [style*="color:var(--ochre)"] {
+  color: var(--gabi-moon-bright) !important;
+}
+
+/* ── TRENDS OVERLAY ── */
+/* trends-overlay removed */
+
+body.person-gabi .trends-hdr { background: var(--gabi-moon-deep); border-bottom-color: var(--gabi-moon-edge); }
+
+body.person-gabi .trends-close { border-color: var(--gabi-moon-edge); color: var(--gabi-moon-mist); }
+/* ── RETRO DATE LINKS ── */
+
+body.person-gabi #retro-toggle-lbl,
+body.person-gabi #retro-date-row span[onclick],
+body.person-gabi [onclick="clearRetroDateWk()"] { color: var(--gabi-moon-glow) !important; }
+
+body.person-gabi [onclick="setAIMode('manual')"],
+body.person-gabi [onclick="setAIMode('auto')"]   { color: var(--gabi-moon-mist); }
+/* ── FILE BUTTON (dashed upload area) ── */
+
+body.person-gabi .file-btn { color: var(--gabi-moon-pale); border-color: var(--gabi-moon-edge); }
+
+body.person-gabi .file-btn:hover { border-color: var(--gabi-moon-glow); color: var(--gabi-moon-bright); }
+/* ── OR DIVIDER ── */
+
+body.person-gabi .or-divider { color: var(--gabi-moon-mist); }
+
+body.person-gabi .or-divider::before,
+body.person-gabi .or-divider::after { background: var(--gabi-moon-edge); }
+/* ── ACTIVITY BONUS (sage labels in movement section) ── */
+/* Keep sage as a neutral positive-status colour — do NOT retheme */
+/* ── TOAST ── */
+/* Toast stays sage (universal "saved" confirmation) */
+/* AI buttons — strong opaque blue */
+
+/* btn-log and btn-quicklog removed from here — base rules now use
+   --pf-accent-orange directly via color-mix(), already correct for
+   both themes without a person-scoped override. */
+body.person-gabi .btn-ai,
+body.person-gabi .btn-primary,
+body.person-gabi .btn-save,
+body.person-gabi .btn-water {
+  background: var(--pf-accent-orange);
+  color: var(--pf-bg);
+  border: none;
+}
+
+body.person-gabi .btn-ai:hover,
+body.person-gabi .btn-primary:hover,
+body.person-gabi .btn-save:hover,
+body.person-gabi .btn-water:hover {
+  filter: brightness(1.12);
+}
+/* Secondary / nav — semi-opaque blue outline */
+
+body.person-gabi .btn-secondary {
+  background: rgba(var(--gabi-moon-glow-rgb),0.10);
+  color: rgba(var(--gabi-moon-bright-rgb),0.80);
+  border: 1.5px solid rgba(74,127,165,0.40);
+}
+
+body.person-gabi .btn-secondary:hover {
+  background: rgba(var(--gabi-moon-glow-rgb),0.22);
+  color: var(--gabi-moon-bright);
+  border-color: rgba(var(--gabi-moon-glow-rgb),0.70);
+}
+/* Sage outline alias — keep as blue-outline for Gabi */
+
+body.person-gabi .btn-sage {
+  background: transparent;
+  color: var(--gabi-moon-bright);
+  border: 1.5px solid var(--gabi-moon-glow);
+}
+
+body.person-gabi .themed-field,
+body.person-gabi .themed-dashed-field {
+  background: var(--gabi-moon-mid) !important;
+  border-color: var(--gabi-moon-edge) !important;
+  color: var(--gabi-moon-ice) !important;
+}
+
+body.person-gabi .themed-dashed-field { border-style: dashed !important; }
+
+body.person-gabi .themed-field:focus,
+body.person-gabi .themed-dashed-field:focus { border-color: var(--gabi-moon-glow) !important; }
+
+body.person-gabi .themed-soil-box { background: var(--gabi-moon-deep); }
+
+body.person-gabi #log-both-btn,
+body.person-gabi #wk-log-both-btn {
+  color: var(--gabi-moon-bright) !important;
+  background: var(--gabi-moon-surf) !important;
+  border-color: var(--gabi-moon-edge) !important;
+}
+
+body.person-gabi #log-both-btn.both-active,
+body.person-gabi #wk-log-both-btn.both-active {
+  background: var(--gabi-moon-glow) !important;
+  color: var(--gabi-moon-deep) !important;
+  border-color: var(--gabi-moon-bright) !important;
+}
+/* Settings / trends close button overrides */
+
+body.person-gabi .trends-close:hover { border-color: var(--gabi-moon-glow); color: var(--gabi-moon-bright); }
+/* ── SYNC STATUS DOT — color set directly by setSyncStatus(), no theme override ── */
+
+body.settings-active.person-gabi {
+  background: linear-gradient(180deg, #111110 0%, #0d0d0c 45%, #0a0a0a 100%);
+}
+
+body.settings-active.person-gabi .trend-card {
+  background: #141414;
+  border-color: #242424;
+}
+
+body.settings-active.person-gabi .sec-eyebrow { color: #666; }
+
+body.settings-active.person-gabi .sec-title   { color: #ccc; }
+
+body.settings-active.person-gabi input[type="number"],
+body.settings-active.person-gabi input[type="text"],
+body.settings-active.person-gabi input[type="password"],
+body.settings-active.person-gabi select,
+body.settings-active.person-gabi textarea {
+  background: #0e0e0e;
+  border-color: #2a2a2a;
+  color: #c8c8c8;
+}
+
+body.settings-active.person-gabi input:focus,
+body.settings-active.person-gabi select:focus,
+body.settings-active.person-gabi textarea:focus { border-color: #555; }
+
+body.settings-active.person-gabi .btn-primary  { background:#333;color:#eee;border:none; }
+
+body.settings-active.person-gabi .btn-primary:hover  { background:#444; }
+
+body.settings-active.person-gabi .btn-save  { background:#2a2a2a;color:#ccc;border:none; }
+
+body.settings-active.person-gabi .btn-save:hover  { background:#383838; }
+
+body.settings-active.person-gabi .btn-secondary {
+  background:#1a1a1a;color:#888;border:1.5px solid #2e2e2e;
+}
+
+body.settings-active.person-gabi .btn-secondary:hover {
+  background:#222;color:#aaa;border-color:#444;
+}
+
+body.settings-active.person-gabi .btn-sage {
+  background:transparent;color:#888;border:1.5px solid #333;
+}
+
+body.settings-active.person-gabi input[type="checkbox"] { accent-color: #555; }
+
+body.settings-active.person-gabi #main-header {
+  background: var(--bark);
+  border-bottom-color: var(--clay);
+}
+
+body.settings-active.person-gabi .bnav { background: var(--bark); border-top-color: var(--clay); }
+
+body.settings-active.person-gabi .bnav-tab { color: var(--mist); }
+
+body.settings-active.person-gabi .bnav-tab.active { color: #ccc; }
+
+body.settings-active.person-gabi .bnav-indicator { background: #ccc; }
+/* Body text & secondary labels */
+
+body.person-gabi { color: var(--gabi-moon-ice); }
+
+body.person-gabi .step-copy,
+body.person-gabi .restore-copy,
+body.person-gabi .mig-copy,
+body.person-gabi .deficit-note,
+body.person-gabi .hero-sub,
+body.person-gabi .hero-note,
+body.person-gabi .hero-frac-sep,
+body.person-gabi .hero-frac-target,
+body.person-gabi .macro-lbl,
+body.person-gabi .legend-txt,
+body.person-gabi .streak-dlbl,
+body.person-gabi .wk-count,
+body.person-gabi .meal-time,
+body.person-gabi .step-title-sub,
+body.person-gabi .or-divider,
+body.person-gabi .trend-stat-lbl,
+body.person-gabi .chart-labels { color: var(--gabi-moon-mist); }
+/* Prominent labels that used --bone or --sand */
+
+body.person-gabi .hero-num,
+body.person-gabi .legend-val,
+body.person-gabi .trend-micro-lbl,
+body.person-gabi .meal-name,
+body.person-gabi .wk-line,
+body.person-gabi .trend-stat-val,
+body.person-gabi .wk-copy { color: var(--gabi-moon-ice); }
+/* Elements that used --ochre for accent colour */
+
+body.person-gabi .step-title,
+body.person-gabi .meal-edit-btn { color: var(--gabi-moon-bright); }
+/* tag-incomplete: ochre → blue */
+
+body.person-gabi .tag-incomplete {
+  background: rgba(var(--gabi-moon-glow-rgb),0.12);
+  color: var(--gabi-moon-bright);
+  border-color: rgba(var(--gabi-moon-glow-rgb),0.45);
+}
+/* alert-warn: ochre → blue-grey */
+
+body.person-gabi .alert-warn {
+  background: rgba(var(--gabi-moon-glow-rgb),0.10);
+  border-color: rgba(var(--gabi-moon-glow-rgb),0.40);
+  color: var(--gabi-moon-pale);
+}
+/* Input / textarea / select focus border */
+
+body.person-gabi input:focus,
+body.person-gabi select:focus { border-color: var(--gabi-moon-glow); }
+/* Inline ochre spans generated by JS (e.g. score breakdown text) */
+
+body.person-gabi [style*="color:var(--ochre)"],
+body.person-gabi [style*="color: var(--ochre)"] {
+  color: var(--gabi-moon-bright) !important;
+}
+
+body.person-gabi [style*="color:var(--sand)"],
+body.person-gabi [style*="color: var(--sand)"] {
+  color: var(--gabi-moon-ice) !important;
+}
+
+body.person-gabi [style*="color:var(--mist)"],
+body.person-gabi [style*="color: var(--mist)"] {
+  color: var(--gabi-moon-mist) !important;
+}
+
+body.person-gabi [style*="color:var(--bone)"],
+body.person-gabi [style*="color: var(--bone)"] {
+  color: var(--gabi-moon-ice) !important;
+}
+/* ── REMAINING WARM-COLOUR LEAKS ── */
+/* Mission field labels */
+
+body.person-gabi .mfield label { color: var(--gabi-moon-mist); }
+/* JS-generated elements that set border-color:var(--ochre) inline
+   (e.g. potates-score-card, activity breakdown notifs) */
+
+body.person-gabi [style*="border-color:var(--ochre)"] {
+  border-color: var(--gabi-moon-glow) !important;
+}
+/* JS-set background:var(--ochre) on buttons (setBtnThinking, etc.) */
+
+body.person-gabi [style*="background:var(--ochre)"],
+body.person-gabi [style*="background: var(--ochre)"] {
+  background: var(--gabi-moon-save) !important;
+  color: #d4e8f4 !important;
+}
+/* .big-kcal span — the "kcal logged today" / target label under the hero number */
+
+body.person-gabi .big-kcal span { color: var(--gabi-moon-mist); }
+/* Textarea placeholder — warm clay bleeds through on all AI input boxes */
+
+body.person-gabi textarea::placeholder { color: var(--gabi-moon-mist); }
+
+/* ══════════════════════════════════════════════════════════════════
+   LAYER 1 + 3 — GLOBAL STRUCTURE & VALUE-DEPENDENT STATE
+   Everything below is identical for both people. Layout, spacing,
+   type, animation = global. Colors here should read a var(--pf-*) or
+   a fixed semantic token (--sage/--terra/--adh-*/--status-*) so
+   Layer 2 above can theme them — a "complete" tag stays the same
+   green for Gabi and Nacho on purpose (value-dependent, not
+   theme-dependent). No person-gabi/person-nacho selectors belong
+   past this point.
+   ══════════════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Baloo+2:wght@400;600&display=swap');
+
+.pf-title {
+  /* Global — screen titles (Vitals/Progress/Kitchen/Workouts/Log) never
+     change with theme, only with content. Fixed color + fixed font. */
+  font-family: 'Baloo 2', sans-serif;
+  font-weight: 700;
+  font-size: 26px;
+  color: #FFFFFF;
+  letter-spacing: 0.2px;
+}
+
+.pf-subheader {
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--pf-text-muted);
+  margin-top: 2px;
+}
+
+.pf-body {
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 13px;
+  color: var(--pf-text-primary);
+}
+
+.pf-label-caps {
+  font-family: 'Baloo 2', sans-serif;
+  font-weight: 500;
+  font-size: 13px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--pf-text-muted);
+}
+.pf-toggle {
+  display: inline-flex;
+  align-items: center;
+  background: var(--pf-toggle-bg);
+  border-radius: var(--pf-toggle-radius);
+  padding: 3px;
+}
+
+.pf-toggle-option {
+  font-family: 'Baloo 2', sans-serif;
+  font-weight: 600;
+  font-size: 11px;
+  color: var(--pf-text-muted);
+  border-radius: calc(var(--pf-toggle-radius) - 2px);
+  padding: 5px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.pf-toggle-option.active {
+  background: var(--pf-accent-orange);
+  color: var(--pf-bg);
+}
+.pf-person-label {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  font-family: 'Baloo 2', sans-serif;
+  font-weight: 600;
+  font-size: 12px;
+}
+.pf-person-label .active   { color: var(--pf-text-primary); }
+.pf-person-label .inactive { color: var(--pf-text-muted); font-weight: 400; }
+.pf-person-label .sep      { color: #3E4B6B; font-weight: 400; }
+.pf-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+}
+.pf-header-row--title { padding-top: 12px; }
+.pf-header-actions { display: flex; align-items: center; gap: 10px; }
+.pf-divider { border: none; border-top: 1px solid var(--pf-divider); margin: 0 16px; }
+#main-header.scrolled,
+#main-header.scrolled #person-subhdr,
+#main-header.scrolled #hdr-tab-row {
+  background: var(--bark);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html {
+  background: var(--soil);
+  overscroll-behavior: none;
+  height: 100%;
+}
+
+body {
+  background: var(--soil);
+  color: var(--bone);
+  font-family: 'Baloo 2', system-ui, sans-serif;
+  font-weight: 400;
+  min-height: 100vh;
+  max-width: 480px;
+  margin: 0 auto;
+  font-size: 15px;
+  padding-bottom: calc(84px + env(safe-area-inset-bottom)); /* clears the bottom .bnav + home indicator */
+  overscroll-behavior: none;
+  transition: background 0.6s ease;
+}/* Settings: darker, neutral, deliberately un-warm and un-cool so it never
+   reads as either person's space. */
+body.settings-active {
+  background: linear-gradient(180deg, #111110 0%, #0d0d0c 45%, #0a0a0a 100%);
+}/* Settings tab: neutral dark cards — no warm/cool person tint bleeds through */
+body.settings-active .trend-card {
+  background: #141414;
+  border-color: #242424;
+}
+body.settings-active .sec-eyebrow { color: #666; }
+body.settings-active .sec-title   { color: #ccc; }
+body.settings-active input[type="number"],
+body.settings-active input[type="text"],
+body.settings-active input[type="password"],
+body.settings-active select,
+body.settings-active textarea {
+  background: #0e0e0e;
+  border-color: #2a2a2a;
+  color: #c8c8c8;
+}
+body.settings-active input:focus,
+body.settings-active select:focus,
+body.settings-active textarea:focus { border-color: #555; }
+body.settings-active .btn-primary  { background:#333;color:#eee;border:none; }
+body.settings-active .btn-primary:hover  { background:#444; }
+body.settings-active .btn-save  { background:#2a2a2a;color:#ccc;border:none; }
+body.settings-active .btn-save:hover  { background:#383838; }
+body.settings-active .btn-secondary {
+  background:#1a1a1a;color:#888;border:1.5px solid #2e2e2e;
+}
+body.settings-active .btn-secondary:hover {
+  background:#222;color:#aaa;border-color:#444;
+}
+body.settings-active .btn-sage {
+  background:transparent;color:#888;border:1.5px solid #333;
+}
+body.settings-active .btn-danger {
+  background:transparent;color:var(--terra);border:1.5px solid var(--terra);
+}/* ── PERSON BODY TINT OVERLAY ── *//* Soft secondary glow that still shifts with person, layered above the
+   body gradient for extra depth in the middle of the screen. */
+#person-tint {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  transition: background 0.6s ease, opacity 0.6s ease;
+  max-width: 480px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+body.settings-active #person-tint { opacity: 0; }/* ── SKY CANVAS — background glow ── */
+#sky-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+body.settings-active #sky-canvas { opacity: 0; }
+#sec-stage {
+  will-change: transform, opacity;
+  position: relative;
+  z-index: 1;
+}/* ── HEADER ── */
+.hdr { display:none; }
+.hdr.hdr-collapsed { display:none; }
+#main-header {
+  position:fixed;top:0;left:50%;
+  transform:translate3d(-50%,0,0);
+  -webkit-backface-visibility:hidden;backface-visibility:hidden;
+  width:100%;max-width:480px;
+  z-index:100;
+  background:transparent;
+  border-bottom:1px solid var(--clay);
+  padding-top:env(safe-area-inset-top);
+  min-height:env(safe-area-inset-top);
+  transition:background .4s ease, border-color .4s ease;
+}
+#hdr-tab-row {
+  display:none;
+  align-items:center;
+  justify-content:space-between;
+  padding:12px 16px 10px;
+  transition:background .4s ease;
+}
+#main-header.header-tall #hdr-tab-row {
+  /* flex (not block): row 2 now holds title+date on the left and the
+     active per-tab toggle on the right, side by side (Phase 1 restyle) */
+  display:flex;
+}
+.hdr-tab-toggle { margin-bottom:0; }/* ── TOP NAV (row 1) — now just the person toggle row ── *//* ── BOTTOM TAB BAR ── */
+.bnav {
+  position:fixed;bottom:0;left:50%;
+  transform:translate3d(-50%,0,0);
+  -webkit-backface-visibility:hidden;backface-visibility:hidden;
+  width:100%;max-width:480px;
+  z-index:100;
+  display:flex;
+  background:var(--bark);
+  border-top:1px solid var(--clay);
+  padding-bottom:env(safe-area-inset-bottom);
+  transition:background .4s ease, border-color .4s ease;
+}
+#hdr-divider {
+  display:none;
+}/* ── PERSON ROW — now the sole top header row, taller ── */
+#person-subhdr {
+  position:relative;
+  display:flex;
+  align-items:center;
+  /* Was centered when this row held title (left, absolute) + names/pill
+     (right); title moved to row 2 in the Phase 1 header restyle, so the
+     one remaining in-flow child (.psh-right, names+pill) now hugs the
+     left edge instead of centering in the empty space. */
+  justify-content:flex-start;
+  padding:10px 16px 12px;
+  background:transparent;
+  transition:background .4s ease;
+}/* Sync dot — absolute top-right corner. Opacity is toggled by
+   setSyncStatus() in state.js (fades out after 5s steady 'synced'). */
+.psh-sync {
+  position:absolute;
+  top:10px;
+  right:14px;
+  font-size:10px;
+  line-height:1;
+  width:10px;
+  text-align:center;
+  transition:opacity .6s ease;
+}
+.hdr-settings-btn {
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  right:14px;
+  width:34px;
+  height:34px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:28px;
+  line-height:1;
+  letter-spacing:2px;
+  color:var(--mist);
+  cursor:pointer;
+  background:none;
+  border:none;
+  padding:0;
+  transition:transform .3s ease, color .2s ease;
+}
+.hdr-settings-btn.spun { transform:translateY(-50%) rotate(90deg); }
+.hdr-settings-btn:active { color:var(--bone); }/* LEFT: just the big section title */
+.psh-left {
+  position:absolute;
+  left:16px;
+  top:50%;
+  transform:translateY(-50%);
+}/* RIGHT: names and pill side by side (was stacked — names on top, pill
+   below — which added two extra lines of header height). */
+.psh-right {
+  display:flex;
+  flex-direction:row;
+  align-items:center;
+  gap:10px;
+  flex-shrink:0;
+  transform:translateX(14px);
+}/* Title wrapper */
+#hdr-title-wrap {
+  position:relative;
+  height:34px;
+  display:flex;
+  align-items:center;
+}
+#hdr-section-title {
+  line-height:1;
+  white-space:nowrap;
+  display:block;
+  opacity:1;
+  transform: translateY(0px);
+  transition: opacity .35s cubic-bezier(.4,0,.6,1), transform .35s cubic-bezier(.4,0,.6,1);
+}
+#hdr-section-title.title-hidden {
+  opacity:0;
+  transform: translateY(-6px);
+}
+#hdr-section-title.title-entering {
+  animation: hdrTitleIn .45s cubic-bezier(.2,.9,.4,1) forwards;
+}
+@keyframes hdrTitleIn {
+  from { opacity:0; transform: translateY(10px); }
+  to   { opacity:1; transform: translateY(0px); }
+}/* Settings: row 2 + divider disappear entirely, header shrinks back to
+   a single opaque row (its original size). *//* Settings + all its sub-screens cover the full screen including the bottom nav */
+body.settings-active .bnav {
+  display: none;
+}
+body.settings-active #sec-stage {
+  padding-bottom: 0;
+}/* Ensure the settings sec and all its sub-screens fill the viewport */
+#sec-settings,
+#sec-profile,
+#sec-targets,
+#sec-quicklog,
+#sec-apikey,
+#sec-notifications,
+#sec-settings-history {
+  min-height: calc(100vh - env(safe-area-inset-top));
+  padding-bottom: calc(32px + env(safe-area-inset-bottom)) !important;
+}
+body.settings-active #hdr-divider { display:none; }
+body.settings-active #main-header {
+  background: var(--bark);
+  border-bottom-color: var(--clay);
+}
+.psh-names {
+  display:flex;
+  align-items:center;
+  gap:0;
+  flex-shrink:0;
+  border-radius:9px;
+  background:rgba(0,0,0,0.18);
+  transition:background .4s ease;
+}
+.psh-name {
+  font-family:'Baloo 2',sans-serif;
+  font-size:16px;
+  font-weight:600;
+  line-height:1;
+  padding:4px 8px;
+  border-radius:7px;
+  cursor:pointer;
+  transition:color .25s, background .25s;
+  user-select:none;-webkit-user-select:none;
+}
+/* Global — always white when selected, grey when not, both themes */
+.psh-name.psh-active-g,
+.psh-name.psh-active-n {
+  color:#FFFFFF;
+  background:transparent;
+}
+.psh-name.psh-inactive {
+  color:rgba(255,255,255,0.4);
+  background:transparent;
+}
+.psh-sep {
+  font-family:'Baloo 2',sans-serif;
+  font-size:11px;color:rgba(154,144,128,0.3);
+  padding:0 2px;
+}/* Pill toggle in sub-header */
+.psh-pill {
+  position:relative;
+  display:flex;
+  width:52px;
+  border-radius:8px;
+  background:#15120D;
+  overflow:hidden;
+  flex-shrink:0;
+  transition:border-color .3s ease;
+  cursor:pointer;
+}
+.psh-pill::before {
+  content:'';
+  position:absolute;
+  top:2px;bottom:2px;left:2px;
+  width:calc(50% - 2px);
+  border-radius:5px;
+  transition:transform .32s cubic-bezier(.34,1.56,.64,1), background .3s ease;
+  z-index:0;
+}
+.psh-pill-half {
+  position:relative;z-index:1;
+  flex:1;padding:6px 0;
+  text-align:center;
+  font-family:'Baloo 2',sans-serif;
+  font-size:9px;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--mist);
+  transition:color .25s ease;
+}/* Meta: sync dot only */
+.psh-date {
+  font-family:'Baloo 2',sans-serif;
+  font-size:10px;letter-spacing:.5px;
+  color:rgba(154,144,128,0.65);
+}
+.bnav-tab {
+  flex:1;padding:18px 4px 20px;
+  text-align:center;
+  font-family:'Baloo 2',sans-serif;
+  font-size:9px;letter-spacing:1.5px;
+  text-transform:uppercase;
+  color:var(--mist);cursor:pointer;
+  transition:color .2s;
+  position:relative;
+}
+.bnav-tab.active { color:var(--ochre); }
+.bnav-icon-img { height:38px; width:auto; opacity:1; transition:opacity .2s; }
+.bnav-tab.active .bnav-mission-img { opacity:1; filter:brightness(0) invert(1); }
+.bnav-tab:not(.active) .bnav-mission-img { opacity:0.4; filter:brightness(0) invert(1); }
+.bnav-label {
+  margin-top:2px;
+  font-family:'Baloo 2',sans-serif;
+  font-size:9px;letter-spacing:1px;
+  text-transform:uppercase;
+  line-height:1;
+  transition:opacity .2s;
+}
+.bnav-tab .bnav-icon-img { opacity:1; }
+.bnav-tab:not(.active) .bnav-icon-img,
+.bnav-tab:not(.active) .bnav-label {
+  opacity:0.4;
+}
+.bnav-tab.active .bnav-icon-img,
+.bnav-tab.active .bnav-label {
+  opacity:1;
+}
+.bnav-indicator {
+  position:absolute;top:-1px;left:0;
+  height:2px;background:var(--ochre);
+  transition:transform .25s cubic-bezier(.4,0,.2,1), width .25s cubic-bezier(.4,0,.2,1), opacity .15s ease;
+  z-index:1;
+}
+.bnav-indicator.hidden { opacity:0; }/* ── SECTIONS ── */
+.sec { display:none; padding: calc(96px + env(safe-area-inset-top)) 20px 20px; }
+#sec-vitals, #sec-history, #sec-log, #sec-kitchen {
+  padding-top: calc(96px + 56px + env(safe-area-inset-top));
+}
+.sec.active { display:block; }
+.sec-transitioning .sec.sec-out, .sec-transitioning .sec.sec-in {
+  display:block;position:absolute;top:0;left:0;right:0;
+  width:100%;will-change:transform;
+}
+.sec-dragging .sec.sec-drag-cur,
+.sec-dragging .sec.sec-drag-prev,
+.sec-dragging .sec.sec-drag-next {
+  display:block;position:absolute;top:0;left:0;right:0;
+  width:100%;will-change:transform;
+}
+.sec-transitioning#sec-stage { overflow:hidden; }
+.sec.sec-out-right { animation: secOutRight .32s cubic-bezier(.4,0,.2,1) forwards; }
+.sec.sec-out-left  { animation: secOutLeft  .32s cubic-bezier(.4,0,.2,1) forwards; }
+.sec.sec-in-right   { animation: secInRight  .32s cubic-bezier(.4,0,.2,1) forwards; }
+.sec.sec-in-left    { animation: secInLeft   .32s cubic-bezier(.4,0,.2,1) forwards; }
+@keyframes secOutLeft  { from { transform:translateX(0); }     to { transform:translateX(-100%); } }
+@keyframes secOutRight { from { transform:translateX(0); }     to { transform:translateX(100%);  } }
+@keyframes secInRight  { from { transform:translateX(100%); }  to { transform:translateX(0);     } }
+@keyframes secInLeft   { from { transform:translateX(-100%); } to { transform:translateX(0);     } }
+
+.subsec-transitioning {
+  position:relative;
+  overflow:hidden;
+}/* Outgoing: stays in normal flow, acts as stable backdrop — not moved */
+.subsec-transitioning .sec.subsec-out {
+  display:block;
+}/* Incoming: absolutely positioned, covers the outgoing panel completely */
+.subsec-transitioning .sec.subsec-in {
+  display:block;
+  position:absolute;
+  top:0; left:0; right:0;
+  min-height:100%;
+  width:100%;
+  will-change:transform;
+  background:var(--soil);
+  z-index:10;
+  padding-top: calc(96px + env(safe-area-inset-top));
+}/* PUSH: new screen slides in from right */
+.sec.subsec-push-in { animation: subsecPushIn .38s cubic-bezier(.32,.72,0,1) forwards; }/* POP: screen being dismissed slides away to the right */
+.sec.subsec-pop-out { animation: subsecPopOut .38s cubic-bezier(.32,.72,0,1) forwards; }
+
+@keyframes subsecPushIn { from { transform:translateX(100%); } to { transform:translateX(0); } }
+@keyframes subsecPopOut { from { transform:translateX(0); }    to { transform:translateX(100%); } }
+#entry-detail-panel {
+  will-change:transform;
+}
+#entry-detail-panel.edp-push-in  { animation: edpPushIn  .38s cubic-bezier(.32,.72,0,1) forwards; }
+#entry-detail-panel.edp-pop-out  { animation: edpPopOut  .38s cubic-bezier(.32,.72,0,1) forwards; }
+@keyframes edpPushIn { from { transform:translateX(100%); } to { transform:translateX(0); } }
+@keyframes edpPopOut { from { transform:translateX(0); }    to { transform:translateX(100%); } }
+
+.sec-eyebrow {
+  font-family:'Baloo 2',sans-serif;
+  font-size:10px;letter-spacing:3px;
+  color:var(--terra);text-transform:uppercase;
+  margin-bottom:4px;
+}
+.sec-title {
+  font-family:'Baloo 2',sans-serif;
+  font-size:28px;font-weight:700;color:var(--bone);
+  margin-bottom:16px;
+}/* ── PERSON TOGGLE / SEGMENTED CONTROL ── */
+.person-toggle, .seg {
+  display:flex;gap:8px;margin-bottom:16px;
+}/* ── MANUAL MODE TOGGLE — small pill switch, not a checkbox ── */
+.manual-mode-toggle {
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:13px;color:var(--mist);cursor:pointer;
+  user-select:none;-webkit-user-select:none;
+}
+.ui-switch { position:relative;display:inline-flex;flex-shrink:0; }
+.ui-switch input {
+  position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer;
+}
+.ui-switch-track {
+  width:34px;height:20px;border-radius:999px;
+  background:var(--bark);border:1px solid var(--clay);
+  display:inline-flex;align-items:center;
+  padding:2px;box-sizing:border-box;
+  transition:background .2s ease, border-color .2s ease;
+}
+.ui-switch-thumb {
+  width:14px;height:14px;border-radius:50%;
+  background:var(--mist);
+  transform:translateX(0);
+  transition:transform .2s cubic-bezier(.34,1.56,.64,1), background .2s ease;
+}
+.ui-switch input:checked + .ui-switch-track {
+  background:var(--sage-dim);border-color:var(--sage);
+}
+.ui-switch input:checked + .ui-switch-track .ui-switch-thumb {
+  transform:translateX(14px);
+  background:var(--sage);
+}
+.ui-switch input:focus-visible + .ui-switch-track {
+  box-shadow:0 0 0 2px rgba(var(--ochre-rgb),0.4);
+}
+
+.ptog {
+  flex:1;padding:10px;
+  border-radius:10px;border:1px solid var(--clay);
+  text-align:center;cursor:pointer;
+  font-family:'Baloo 2',sans-serif;
+  font-size:15px;transition:all .2s;
+  color:var(--mist);background:var(--bark);
+}
+.ptog.active-g,
+.ptog.active-n { color:var(--pf-bg);border-color:transparent;background:var(--pf-accent-orange); }/* ── USER IDENTITY TOGGLE ── */
+.user-id-toggle {
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:18px;
+  padding:13px 16px;
+  border-radius:14px;
+  border:2px solid var(--clay);
+  background:#1E1A14;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.03);
+  cursor:pointer;
+  user-select:none;
+  -webkit-user-select:none;
+  transition:border-color .3s ease, background .3s ease, box-shadow .2s ease, transform .15s cubic-bezier(.34,1.56,.64,1);
+}
+.user-id-toggle:active { transform:scale(0.97); }
+.user-id-toggle.uid-switch-fx {
+  animation: uidSwitchPop .42s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes uidSwitchPop {
+  0%   { transform:scale(0.94); }
+  45%  { transform:scale(1.035); }
+  100% { transform:scale(1); }
+}
+
+.user-id-names {
+  display:flex;flex-direction:column;gap:3px;
+}
+.user-id-primary {
+  font-family:'Baloo 2',sans-serif;
+  font-size:24px;line-height:1;font-weight:600;
+  transition:color .3s ease;
+}
+
+.user-id-secondary {
+  font-family:'Baloo 2',sans-serif;
+  font-size:15px;color:rgba(154,144,128,0.55);
+  font-weight:600;
+  transition:color .3s ease;
+}
+.user-id-pill {
+  position:relative;
+  display:flex;
+  width:64px;
+  border-radius:9px;
+  border:1.5px solid var(--clay);
+  background:#15120D;
+  overflow:hidden;
+  flex-shrink:0;
+  transition:border-color .3s ease;
+}/* Solid sliding thumb — sits behind the letters, slides left/right */
+.user-id-pill::before {
+  content:'';
+  position:absolute;
+  top:2px; bottom:2px; left:2px;
+  width:calc(50% - 2px);
+  border-radius:7px;
+  background:var(--ochre-dim);
+  transition:transform .32s cubic-bezier(.34,1.56,.64,1), background .3s ease;
+  z-index:0;
+}
+
+.user-id-pill-half {
+  position:relative;
+  z-index:1;
+  flex:1;
+  padding:7px 0;
+  text-align:center;
+  font-family:'Baloo 2',sans-serif;
+  font-size:10px;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--mist);
+  transition:color .25s ease, font-weight .25s ease;
+}
+
+.seg-opt {
+  flex:1;padding:8px 4px;
+  border-radius:10px;border:1px solid var(--clay);
+  text-align:center;cursor:pointer;
+  font-family:'Baloo 2',sans-serif;
+  font-size:13px;letter-spacing:1px;text-transform:uppercase;
+  color:var(--mist);background:var(--bark);
+  transition:all .2s;
+}
+.seg-opt.active { color:var(--pf-bg);border-color:transparent;background:var(--pf-accent-orange); }
+/* Universal — was #hdr-tab-row-scoped only; generalized so any element
+   with both .seg/.seg-opt AND .pf-toggle/.pf-toggle-option gets the same
+   pill look, wherever it's used (header, wo-mini-toggle-row,
+   kitchen-section, Meal Log Auto/Manual, etc.) instead of copy-pasting this
+   override per screen.
+
+   Sliding highlight: the active background now lives on a single
+   .pf-toggle-slider element (added/positioned by syncPfToggleSlider() in
+   ui.js) rather than being painted directly on the active .pf-toggle-option.
+   That's what makes it slide between options instead of instantly
+   swapping color — same idea as the G/N person-toggle's ::before, just a
+   separate shorter-duration animation (0.2s vs G/N's 0.32s) so it doesn't
+   read as the same control. */
+.seg.pf-toggle {
+  position: relative;
+  gap:0;
+  margin-bottom:0;
+  background: var(--pf-toggle-bg);
+  border-radius: var(--pf-toggle-radius);
+  padding: 3px;
+}
+.pf-toggle-slider {
+  position: absolute;
+  /* top/left are 0 here on purpose — the slider's position comes entirely
+     from the inline transform in syncPfToggleSlider() (translate to the
+     active option's offsetLeft/offsetTop, which already accounts for the
+     container's own 3px padding). A non-zero top here used to double up
+     with that offset, pushing the pill down and reading as a gap above
+     the selected option — most visible wherever nothing else was also
+     painting a background directly on .active to mask it. */
+  top: 0; left: 0;
+  background: var(--pf-accent-orange);
+  border-radius: calc(var(--pf-toggle-radius) - 2px);
+  transition: transform .2s cubic-bezier(.34,1.2,.64,1), width .2s cubic-bezier(.34,1.2,.64,1);
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+}
+.seg-opt.pf-toggle-option {
+  position: relative;
+  z-index: 1;
+  font-family: 'Baloo 2', sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: normal;
+  text-transform: none;
+  color: rgba(255,255,255,0.68);
+  border: none;
+  border-radius: calc(var(--pf-toggle-radius) - 2px);
+  padding: 5px 10px;
+  background: transparent;
+  transition: color .2s ease;
+}
+.seg-opt.pf-toggle-option.active {
+  color: #000;
+  border-color: transparent;
+  background: transparent;
+}
+/* Selected pill background — brighter across both themes (Nacho + Gabi
+   share this rule via --pf-accent-orange). */
+.pf-toggle-slider { filter: brightness(1.15); }/* ── DAY CARD ── */
+.day-card {
+  background:var(--bark);
+  border-radius:var(--pf-card-radius);margin-bottom:10px;overflow:hidden;
+}
+.calories-micro-group {
+  background: var(--bark);
+  border-radius: var(--pf-card-radius);
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+.calories-micro-divider {
+  height: 1px;
+  background: var(--clay);
+  opacity: 0.45; /* "less strong type following theme" */
+  margin: 0 14px;
+}
+
+.day-card-hdr {
+  padding:12px 14px 0;
+  display:flex;align-items:center;justify-content:flex-end;
+  min-height:0;
+  border-bottom:none;
+}
+.day-card-hdr:empty { padding:0; }
+.day-card-check {
+  display:flex;align-items:center;justify-content:center;
+  line-height:0;
+}
+.day-card-name {
+  font-family:'Baloo 2',sans-serif;font-size:16px;font-weight:600;
+  display:flex;align-items:center;gap:8px;
+}
+.dot { width:7px;height:7px;border-radius:50%;flex-shrink:0; }
+.status-tag {
+  font-family:'Baloo 2',sans-serif;
+  font-size:10px;letter-spacing:1px;text-transform:uppercase;
+  padding:2px 7px;border-radius:2px;
+}
+.tag-incomplete { background:var(--ochre-dim);color:var(--ochre);border:1px solid var(--ochre); }
+.tag-complete { background:var(--sage-dim);color:var(--sage);border:1px solid var(--sage); }
+.tag-neutral { background:var(--clay);color:var(--mist);border:1px solid var(--clay); }
+
+.day-card-body { padding:14px; }
+
+.big-kcal {
+  font-family:'Baloo 2',sans-serif;
+  color:var(--bone);
+  font-weight:600;
+  line-height:1;
+}/* Today view: number slightly bigger than before; label sized between
+   the old single size and Week/Month to keep hierarchy clear. */
+.big-kcal-today  { font-size:26px; }
+.big-kcal-period { font-size:22px; }
+.big-kcal-label {
+  font-family:'Baloo 2',sans-serif;
+  font-size:13px;color:var(--mist);
+  font-weight:500;margin-left:6px;
+  letter-spacing:0.2px;
+}
+.kcal-target {
+  font-family:'Baloo 2',sans-serif;
+  font-size:11px;color:var(--mist);
+  margin-top:2px;margin-bottom:12px;
+}
+
+.deficit-bar {
+  height:3px;background:var(--clay);
+  border-radius:2px;overflow:hidden;margin-bottom:4px;
+}/* Under-target: single animated fill */
+.deficit-fill { height:100%;border-radius:2px;transition:width .5s ease; }/* Over-target: two-segment bar inside a flex row.
+   base fill = target/consumed %, overflow fill = the rest in red. */
+.deficit-bar-over {
+  display:flex;flex-direction:row;
+  background:var(--clay);
+}
+.deficit-fill-base {
+  height:100%;
+  border-radius:2px 0 0 2px;
+  flex-shrink:0;
+}
+.deficit-fill-over {
+  height:100%;
+  border-radius:0 2px 2px 0;
+  flex-shrink:0;
+}
+
+.deficit-label {
+  font-family:'Baloo 2',sans-serif;
+  font-size:12px;margin-bottom:4px;
+}
+.deficit-note { font-size:14px;color:var(--mist);margin-bottom:14px; }/* +N Kcal / N Kcal Left line — muted status colour set from JS */
+.kcal-status-line {
+  font-family:'Baloo 2',sans-serif;
+  font-size:12px;
+  font-weight:500;
+  margin-bottom:10px;
+  letter-spacing:0.3px;
+}
+
+.activity-bonus-block { margin:6px 0 10px; }
+.activity-bonus-title {
+  font-family:'Baloo 2',sans-serif;
+  font-size:10px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--sage);margin-bottom:4px;
+}
+.activity-bonus-line {
+  font-size:14px;color:var(--sage);margin-bottom:2px;
+}
+.realtime-deficit-line {
+  font-family:'Baloo 2',sans-serif;
+  font-size:11px;color:var(--mist);margin-top:2px;
+}
+
+.hero-frac-sep { font-weight:400;color:var(--mist);margin:0 2px; }
+.hero-frac-target { font-size:0.55em;font-weight:400;color:var(--mist); }
+
+.macro-row {
+  display:flex;justify-content:space-between;
+  padding:5px 0;border-bottom:1px solid var(--clay);
+  font-size:14px;
+}
+.macro-row:last-child { border-bottom:none; }
+.macro-lbl { color:var(--mist); }
+.macro-val {
+  font-family:'Baloo 2',sans-serif;font-size:12px;
+}/* ── DONUT ── */
+.donut-block {
+  padding:12px 12px;
+  margin:2px 0 0;
+  background: var(--soil);
+  border-radius: 8px;
+}
+.donut-row { display:flex;align-items:center;gap:20px; }
+.donut-wrap {
+  position:relative;width:104px;height:104px;flex-shrink:0;
+}
+.donut {
+  width:104px;height:104px;border-radius:50%;
+  animation: donutSpinIn .4s cubic-bezier(.3,0,.2,1);
+}
+@keyframes donutSpinIn {
+  from { opacity:0; transform:rotate(-90deg) scale(.85); }
+  to   { opacity:1; transform:rotate(0) scale(1); }
+}
+.donut-hole {
+  position:absolute;top:14px;left:14px;
+  width:76px;height:76px;border-radius:50%;
+  background:var(--bark);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+}
+.donut-hole-kcal {
+  font-family:'Baloo 2',sans-serif;font-size:15px;font-weight:700;color:var(--bone);line-height:1;
+}
+.donut-hole-lbl {
+  font-family:'Baloo 2',sans-serif;font-size:10px;color:var(--mist);
+  letter-spacing:0.5px;text-transform:uppercase;margin-top:2px;
+}
+.donut-legend { flex:1; }
+.donut-gap-ring { background: var(--soil); }
+.legend-item {
+  display:flex;align-items:center;gap:8px;
+  font-size:13px;padding:4px 0;
+}
+.legend-dot { width:9px;height:9px;border-radius:2px;flex-shrink:0; }
+.legend-txt { font-family:'Baloo 2',sans-serif;font-size:13px;font-weight:500;color:var(--sand);flex:1; }
+.legend-val { font-family:'Baloo 2',sans-serif;font-size:14px;color:var(--bone); }/* ── STREAK STRIP ── */
+.streak-block {
+  background:var(--bark);
+  border-radius:var(--pf-card-radius);padding:14px;margin-bottom:14px;
+}
+.streak-row { display:flex;justify-content:space-between;gap:4px;margin-top:10px; }
+.streak-day { flex:1;text-align:center; }
+.streak-dot {
+  width:18px;height:18px;border-radius:50%;
+  margin:0 auto 5px;border:1px solid var(--clay);
+}
+.streak-dlbl { font-family:'Baloo 2',sans-serif;font-size:9px;color:var(--mist);text-transform:uppercase; }/* ── WORKOUT TALLY ── */
+.wk-block {
+  background:var(--bark);
+  border-radius:var(--pf-card-radius);padding:14px;margin-bottom:10px;
+}
+.wk-row { margin-top:10px; }
+.wk-line {
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:13px;color:var(--sand);margin-bottom:6px;
+}
+.wk-count { font-family:'Baloo 2',sans-serif;font-size:11px;color:var(--mist); }
+.wk-bar-bg { height:5px;background:var(--clay);border-radius:2px;overflow:hidden;margin-bottom:10px; }
+.wk-bar-fill { height:100%;background:var(--sage);border-radius:2px; }
+/* Water card only — a vertical "glass" fill instead of Movement's
+   horizontal bar. Kept as its own class rather than repurposing
+   .wk-bar-bg/.wk-bar-fill, which Movement still uses unchanged. Color
+   only, no glass details (no rim/highlight) per direction. */
+.wtr-glass {
+  width: 30px;
+  border-radius: 14px;
+  background: var(--pf-toggle-bg, rgba(255,255,255,0.06));
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+  align-self: stretch;
+}
+body.person-nacho .wtr-glass { background: var(--clay); }
+.wtr-glass-fill {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 0%;
+  min-height: 6px;
+  /* Belt-and-braces alongside the JS-side cap (see vitals.js/log.js) —
+     even if some caller sets height:100%, this keeps a sliver of
+     headroom above the fill so the wave never gets clipped flat by the
+     glass's overflow:hidden. */
+  max-height: 92%;
+  background: var(--pf-accent-teal);
+  color: var(--pf-accent-teal);
+  transition: height .4s ease;
+}
+body.person-nacho .wtr-glass-fill { background: var(--water-fill); color: var(--water-fill); }
+.wtr-glass-wave {
+  position: absolute;
+  top: -6px; left: 0;
+  width: 100%; height: 8px;
+  display: block;
+}
+/* ── Large variant — Log → Water tab, next to the doodle. Same fill/wave
+   mechanics as the small vitals-card glass, just bigger and given room
+   to breathe (own min-height instead of relying on a flex sibling to
+   stretch against). ── */
+.wtr-glass-lg {
+  width: 56px;
+  min-height: 130px;
+}/* ── RESTORE BLOCK ── */
+.restore-block {
+  border-radius:var(--pf-card-radius);
+  padding:12px 14px;margin-top:20px;
+}
+.restore-title {
+  font-family:'Baloo 2',sans-serif;font-size:10px;letter-spacing:2px;
+  color:var(--mist);text-transform:uppercase;margin-bottom:6px;
+}
+.restore-copy { font-size:14px;color:var(--mist);line-height:1.6;margin-bottom:10px; }/* ── MEAL/WORKOUT ENTRY ── */
+.meal-entry {
+  background:var(--soil);border:1px solid var(--clay);
+  border-radius:10px;padding:8px 10px;
+  margin-bottom:6px;
+  font-size:14px;
+}
+.meal-entry-top {
+  display:flex;justify-content:space-between;
+  align-items:center;margin-bottom:3px;
+}
+.meal-name { color:var(--sand); }
+.meal-time {
+  font-family:'Baloo 2',sans-serif;
+  font-size:10px;color:var(--mist);
+}
+.meal-kcal {
+  font-family:'Baloo 2',sans-serif;
+  font-size:11px;color:var(--ochre);
+}
+.meal-delete {
+  background:none;border:none;color:var(--terra);
+  font-size:14px;cursor:pointer;padding:0 4px;
+  opacity:0.6;
+}
+.meal-delete:hover { opacity:1; }
+.photo-thumb {
+  position: relative;
+  width: 56px;
+  height: 56px;
+}
+.photo-thumb img {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid var(--clay);
+  display: block;
+}
+.photo-thumb-del {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  border: none;
+  color: #000;
+  font-size: 10px;
+  line-height: 18px;
+  text-align: center;
+  padding: 0;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+}
+.photo-thumb-del:active { transform: scale(0.92); }
+.photo-thumb-row { display:flex;flex-wrap:wrap;gap:8px; }
+/* ── KITCHEN — new PLAN/SHOP/COOK module CSS lives further down this file
+   (search "KITCHEN MODULE — meal cards"). The old single/bundle/tier/size
+   picker CSS that used to live here was removed as part of the kitchen
+   overhaul (kitchen-overhaul-prompt.md §10). */
+.step-block {
+  background:var(--bark);
+  border-radius:var(--pf-card-radius);padding:16px;margin-bottom:14px;
+}
+.step-hdr { display:flex;align-items:center;gap:10px;margin-bottom:10px; }
+.step-num {
+  width:22px;height:22px;border-radius:50%;
+  background:var(--ochre-dim);border:1px solid var(--ochre);
+  color:var(--ochre);font-family:'Baloo 2',sans-serif;
+  font-size:12px;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.step-title {
+  font-family:'Baloo 2',sans-serif;font-size:16px;font-weight:600;color:var(--bone);
+}
+.step-copy { font-size:14px;color:var(--mist);line-height:1.6;margin-bottom:12px; }
+
+/* ── MANUAL MODE (Log → Meal → Manual) — brighter, bolder step text ── */
+#ai-panel-manual .step-copy { color:var(--bone); }
+#ai-panel-manual .step-title { font-weight:700; color:var(--bone); }
+body.person-gabi #ai-panel-manual .copy-prompt-btn { border-color:var(--pf-accent-orange); }
+
+.or-divider {
+  display:flex;align-items:center;gap:10px;
+  margin:10px 0;color:var(--mist);font-size:10px;
+  letter-spacing:2px;text-transform:uppercase;
+  font-family:'Baloo 2',sans-serif;
+}
+.or-divider::before, .or-divider::after {
+  content:'';flex:1;height:1px;background:var(--clay);
+}
+
+.file-btn {
+  display:block;width:100%;padding:13px;
+  border-radius:var(--pf-card-radius);
+  background:var(--soil);
+  border:1px solid var(--clay);
+  text-align:center;cursor:pointer;
+  font-family:'Baloo 2',sans-serif;
+  font-size:11px;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--sand);transition:all .2s;
+}
+.file-btn:hover { color:var(--ochre); }
+.file-btn input { display:none; }/* ── PASTE AREA ── */
+.paste-block { margin-bottom:4px; }
+textarea {
+  width:100%;background:var(--soil);
+  border:1px solid var(--clay);border-radius:10px;
+  color:var(--bone);
+  font-family:'Baloo 2',sans-serif;
+  font-size:14px;padding:10px;
+  resize:vertical;min-height:70px;line-height:1.6;
+}
+textarea:focus { outline:none;border-color:var(--ochre); }
+textarea::placeholder { color:var(--clay); }/* ── BUTTONS ── */
+.btn {
+  width:100%;padding:14px;border:none;border-radius:10px;
+  font-family:'Baloo 2',sans-serif;
+  font-size:14px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  text-align:center;
+  cursor:pointer;transition:transform .15s ease-out, background .2s, color .2s, border-color .2s;
+  margin-top:8px;
+}/* Submit / write-to-Firebase / costs-AI-tokens actions — accent-orange,
+   both themes. (Was inconsistent: ai/primary were already orange, but
+   save/log/quicklog were sage-green — now all match.) */
+.btn-ai { background:var(--pf-accent-orange);color:var(--pf-bg);font-weight:500;border:none; }
+.btn-ai:hover { filter:brightness(1.12); }
+.btn-save { background:var(--pf-accent-orange);color:var(--pf-bg);font-weight:500;border:none; }
+.btn-save:hover { filter:brightness(1.12); }/* ── Meal Log Auto/Manual toggle — solid pill, themed per person ── */
+.meal-mode-toggle {
+  display:flex;gap:2px;padding:3px;border-radius:var(--pf-toggle-radius);
+  background:rgba(0,0,0,0.25);border:1px solid rgba(255,255,255,0.08);flex-shrink:0;
+}
+.mmt-opt {
+  font-family:'Baloo 2', sans-serif;font-weight:600;font-size:11px;
+  letter-spacing:normal;text-transform:none;padding:5px 10px;
+  border-radius:calc(var(--pf-toggle-radius) - 2px);cursor:pointer;
+  color:var(--pf-text-muted);user-select:none;
+}
+/* .mmt-opt.active used to paint its background directly here. Now that
+   this toggle carries .seg-opt.pf-toggle-option (see index.html), the
+   active background comes from the shared .pf-toggle-slider element
+   instead — same mechanism as every other migrated toggle — so this
+   rule is intentionally gone rather than left as a second, contradicting
+   background declaration. */
+/* Log / utility actions — sage outline, rests in dim-pressed state */
+.btn-log {
+  background: color-mix(in srgb, var(--pf-accent-orange) 22%, transparent);
+  color: var(--pf-accent-orange);
+  border: 1.5px solid color-mix(in srgb, var(--pf-accent-orange) 45%, transparent);
+  font-weight: 600;
+}
+.btn-log:hover {
+  background: color-mix(in srgb, var(--pf-accent-orange) 38%, transparent);
+  border-color: color-mix(in srgb, var(--pf-accent-orange) 75%, transparent);
+}
+/* Quick-log — solid, but 90% opaque per feedback (was reading too
+   heavy/flat at full opacity on Gabi's theme), font a step heavier
+   so it reads as the more prominent action next to Log. */
+.btn-quicklog {
+  background: color-mix(in srgb, var(--pf-accent-orange) 90%, transparent);
+  color: var(--pf-bg);
+  border: none;
+  font-weight: 700;
+}
+.btn-quicklog:hover {
+  background: var(--pf-accent-orange);
+}
+/* "Add Workout" — deliberately smaller/secondary-feeling than a full-width
+   primary action, since it now sits below the search bar rather than being
+   the first thing on the page. */
+.wo-create-row { display: flex; gap: 8px; margin: 12px 0 14px; }
+.wo-add-workout-btn {
+  flex: 1; width: auto; display: inline-block; padding: 9px 10px; font-size: 12px;
+  letter-spacing: 1px; border-radius: 8px; margin-top: 0;
+  text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+/* Water tap buttons — solid blue-teal, clearly distinct from both btn-log
+   and btn-quicklog */
+.btn-water {
+  background:rgba(74,160,180,0.40);
+  color:rgba(130,210,230,0.95);
+  border:1.5px solid rgba(74,160,180,0.65);
+}
+.btn-water:hover {
+  background:rgba(74,160,180,0.60);
+  color:rgb(160,230,245);
+  border-color:rgba(74,160,180,0.90);
+}/* Secondary / nav — ochre outline, rests in dim-pressed state, brightens on hover */
+.btn-secondary {
+  background:var(--ochre-dim);
+  color:rgba(var(--ochre-rgb),0.75);
+  border:1.5px solid rgba(200,134,58,0.45);
+}
+.btn-secondary:hover {
+  background:rgba(var(--ochre-rgb),0.25);
+  color:var(--ochre);
+  border-color:rgba(var(--ochre-rgb),0.75);
+}/* Legacy aliases kept so untouched buttons don't break */
+.btn-primary { background:var(--ochre);color:var(--soil);font-weight:500;border:none; }
+.btn-primary:hover { background:var(--sand); }
+.btn-sage { background:transparent;color:var(--sage);border:1.5px solid var(--sage); }
+.btn-danger { background:transparent;color:var(--terra);border:1.5px solid var(--terra); }
+.edit-history-btn {
+  width:auto;
+  padding:10px 18px;
+  background:var(--ochre-dim);
+  color:var(--ochre);
+  border:1.5px solid var(--ochre);
+  border-radius:8px;
+  font-size:13px;
+  font-weight:700;
+  cursor:pointer;
+}
+.edit-history-btn:hover { background:rgba(var(--ochre-rgb),0.28); }
+.btn-sm {
+  width:auto;padding:9px 14px;font-size:11px;
+  display:inline-flex;align-items:center;justify-content:center;margin-top:0;
+}/* ── ALERT ── */
+.alert {
+  padding:10px 12px;border-radius:10px;
+  font-size:14px;margin-bottom:12px;line-height:1.5;
+}
+.alert-info { background:var(--sage-dim);border:1px solid var(--sage);color:var(--sage); }
+.alert-warn { background:var(--ochre-dim);border:1px solid var(--ochre);color:var(--ochre); }/* ── MISSION ── */
+.mission-block {
+  background:var(--bark);
+  border-radius:var(--pf-card-radius);padding:14px;margin-bottom:12px;
+  transition:opacity .3s ease;
+}
+.mission-title {
+  font-family:'Baloo 2',sans-serif;font-weight:600;
+  font-size:16px;color:var(--ochre);margin-bottom:14px;
+  display:flex;align-items:center;gap:8px;
+}
+.mfield { margin-bottom:10px; }
+.mfield label {
+  font-size:11px;color:var(--mist);
+  letter-spacing:0.5px;display:block;
+  margin-bottom:4px;text-transform:uppercase;
+}
+.weight-log-row { display:flex;gap:6px; }
+.weight-log-row input[type="number"] { width:auto;min-width:0; }
+.weight-current { flex:0 0 30%;opacity:0.6;cursor:not-allowed; }
+.weight-log-row input#g-weight-log,
+.weight-log-row input#n-weight-log { flex:1; }
+.weight-log-btn {
+  width:auto;flex:0 0 auto;white-space:nowrap;
+  margin-top:0;padding:0 14px;font-size:13px;
+  text-transform:none;letter-spacing:0;
+}
+input[type="number"],input[type="text"],input[type="password"],select {
+  width:100%;background:var(--soil);background-color:var(--soil);background-image:none;
+  border:1px solid var(--clay);border-radius:10px;
+  color:var(--bone);font-family:'Baloo 2',sans-serif;
+  font-size:14px;line-height:1.3;padding:9px 11px;box-shadow:none;
+  -webkit-appearance:none;appearance:none;color-scheme:dark;
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button { -webkit-appearance:none;margin:0; }
+input:focus,select:focus { outline:none;border-color:var(--ochre); }
+select option { background:var(--bark); }
+
+.mig-block {
+  background:var(--bark);
+  border-radius:var(--pf-card-radius);padding:14px;margin-bottom:12px;
+}
+.mig-title {
+  font-family:'Baloo 2',sans-serif;
+  font-size:10px;letter-spacing:3px;
+  color:var(--terra);text-transform:uppercase;margin-bottom:6px;
+}
+.mig-copy { font-size:14px;color:var(--mist);line-height:1.6;margin-bottom:10px; }/* ── MISSION PERSON FILTER ── */
+.mission-block[data-person] { display:none; }
+.mission-block[data-person].visible { display:block; }/* ── DIVIDER ── */
+.div { height:1px;background:var(--clay);margin:18px 0; }
+@keyframes markCompleteGlowIn {
+  0%   { box-shadow: 0 0 0px 0px rgba(122,158,126,0); }
+  60%  { box-shadow: 0 0 10px 4px rgba(122,158,126,0.55), 0 0 18px 6px rgba(122,158,126,0.3); }
+  100% { box-shadow: 0 0 5px 2px rgba(122,158,126,0.35), 0 0 10px 3px rgba(122,158,126,0.18); }
+}
+.mark-complete-glow {
+  animation: markCompleteGlowIn 0.7s ease-out forwards;
+  box-shadow: 0 0 5px 2px rgba(122,158,126,0.35), 0 0 10px 3px rgba(122,158,126,0.18);
+}/* ── CHECKBOX BOUNCE ── */
+@keyframes checkBounce {
+  0%   { transform:scale(1); }
+  40%  { transform:scale(1.35); }
+  100% { transform:scale(1); }
+}
+.check-bounce { animation: checkBounce .2s ease-out; }/* ── AI THINKING STATE ── */
+.btn-thinking { cursor:default;opacity:0.85; }
+.btn-thinking .think-label { opacity:0.75; }
+.btn-thinking-dots { display:inline-flex;gap:3px;margin-left:7px;vertical-align:middle; }
+.btn-thinking-dots span {
+  width:4px;height:4px;border-radius:50%;
+  background:currentColor;opacity:0.25;
+  animation: thinkPulse 1.1s ease-in-out infinite;
+}
+.btn-thinking-dots span:nth-child(2) { animation-delay:.15s; }
+.btn-thinking-dots span:nth-child(3) { animation-delay:.3s; }
+@keyframes thinkPulse {
+  0%, 60%, 100% { opacity:0.25;transform:scale(1); }
+  30% { opacity:1;transform:scale(1.3); }
+}/* ── UNIVERSAL PRESS FEEDBACK ── */
+.btn, .ptog, .seg-opt, .wk-type-btn,
+.meal-delete, .weight-hist-del, .trends-close,
+.hist-day-hdr, .meal-card-add, .meal-card-save, .kitchen-chip, .kitchen-filter-btn {
+  transition: transform .15s ease-out;
+}
+.btn.press-fx, .ptog.press-fx, .seg-opt.press-fx, .wk-type-btn.press-fx, .meal-delete.press-fx,
+.weight-hist-del.press-fx, .trends-close.press-fx,
+.hist-day-hdr.press-fx, .meal-card-add.press-fx, .meal-card-save.press-fx, .kitchen-chip.press-fx, .kitchen-filter-btn.press-fx {
+  transform: scale(0.96);
+  transition: transform .04s ease-out;
+}
+#per-day.press-fx, #per-week.press-fx, #per-month.press-fx {
+  background: rgba(var(--ochre-rgb),0.35) !important;
+}/* ── HISTORY DAY CARD ── */
+.hist-day-card { margin-bottom:8px; }/* Brief highlight pulse so the user can see which day the calendar jump
+   landed on, since it may be scrolled into view well below the fold. */
+.hday-jump-flash { animation: hdayJumpFlash 1.2s ease-out; }
+@keyframes hdayJumpFlash {
+  0%   { background: rgba(var(--ochre-rgb), 0.22); }
+  100% { background: transparent; }
+}
+.hist-day-hdr {
+  display:flex;align-items:center;justify-content:space-between;
+  padding:9px 12px;cursor:pointer;
+  background:var(--bark);
+}
+.hist-day-date {
+  font-size:11px;font-family:'Baloo 2',sans-serif;
+  color:var(--ochre);letter-spacing:1px;
+}
+.hday-detail-wrap {
+  display:grid;grid-template-rows:0fr;overflow:hidden;
+  transition:grid-template-rows .32s cubic-bezier(.4,0,.2,1);
+}
+.hday-detail-wrap.open { grid-template-rows:1fr; }
+.hday-detail-wrap > div {
+  min-height:0;opacity:0;transform:translateY(-4px);
+  transition:opacity .22s ease .04s,transform .22s ease .04s;
+}
+.hday-detail-wrap.open > div { opacity:1;transform:translateY(0); }
+.hday-arr { display:inline-block;transition:transform .25s ease; }
+.hday-arr.open { transform:rotate(90deg); }/* ── POTATES SCORE BREAKDOWN ── */
+.pbd-arr {
+  display:inline-flex;align-items:center;justify-content:center;
+  width:28px;height:28px;flex-shrink:0;border-radius:50%;
+  background:rgba(255,255,255,0.16);
+  cursor:pointer;margin:0 4px;position:relative;
+  transition:background .2s ease;
+}
+.pbd-arr::after {
+  content:'';display:block;width:8px;height:8px;margin-top:-3px;
+  border-right:1.5px solid var(--mist);border-bottom:1.5px solid var(--mist);
+  transform:rotate(45deg);transition:transform .3s ease,border-color .2s ease;
+}
+.pbd-arr.open::after { transform:rotate(225deg);margin-top:3px;border-color:var(--ochre); }
+.pbd-wrap {
+  display:grid;grid-template-rows:0fr;overflow:hidden;
+  transition:grid-template-rows .32s cubic-bezier(.4,0,.2,1);
+}
+.pbd-wrap.open { grid-template-rows:1fr; }
+.pbd-wrap > div {
+  min-height:0;opacity:0;transform:translateY(-4px);
+  transition:opacity .22s ease .04s,transform .22s ease .04s;
+}
+.pbd-wrap.open > div { opacity:1;transform:translateY(0); }
+.pbd-row { padding:6px 0; }
+.pbd-row-top { display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px; }
+.pbd-lbl { font-size:14px;color:var(--sand); }
+.pbd-note { font-size:11px;color:var(--mist);font-weight:600;margin-left:8px;text-align:right;flex:1; }
+.pbd-pts { font-family:'Baloo 2',sans-serif;font-size:11px;color:var(--ochre);white-space:nowrap;margin-left:6px; }
+.pbd-bar-bg { height:5px;background:var(--clay);border-radius:2px;overflow:hidden; }
+.pbd-bar-fill { height:100%;background:var(--sage);border-radius:2px;width:0%;transition:width .6s ease; }/* ── TOAST ── */
+.toast {
+  position:fixed;bottom:90px;left:50%;
+  transform:translateX(-50%) translateY(12px);
+  background:var(--sage);color:var(--soil);
+  font-family:'Baloo 2',sans-serif;
+  font-size:11px;letter-spacing:2px;
+  padding:8px 20px;border-radius:10px;
+  opacity:0;transition:opacity .2s ease-out, transform .2s ease-out;
+  pointer-events:none;z-index:9999999;
+  text-transform:uppercase;
+  max-width:90%;text-align:center;
+}
+.toast.show { opacity:1;transform:translateX(-50%) translateY(0); }
+/* ── DIGEST OVERLAY ── */
+/* Full-screen blur+darken cover shown while a meal or workout log entry is
+   being submitted — masks either real AI "thinking" time (min 3s) or, for
+   manual entries with nothing to wait on, a fixed 3s beat. Sits below the
+   toast (9999999) so a toast fired right as it closes still reads on top,
+   but above every other in-app overlay. */
+.digest-overlay {
+  position:fixed;inset:0;z-index:999997;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:16px;
+  background:rgba(40,38,34,0.5);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  opacity:0;pointer-events:none;
+  transition:opacity .25s ease-out;
+  padding:24px;text-align:center;
+}
+.digest-overlay.show { opacity:1;pointer-events:all; }
+.digest-overlay-gif {
+  object-fit:contain;
+  filter:drop-shadow(0 4px 18px rgba(0,0,0,0.4));
+  transition:opacity .2s ease-out;
+}
+/* Meal gif: 4x the original 150px baseline (600px), capped at 85vw so it
+   never overflows a phone screen. */
+.digest-overlay-gif-meal { width:min(600px, 85vw); height:min(600px, 85vw); }
+/* Workout gif: 2x the original 150px baseline (300px), capped at 70vw. */
+.digest-overlay-gif-workout { width:min(300px, 70vw); height:min(300px, 70vw); }
+.digest-overlay-title {
+  font-family:'Baloo 2',sans-serif;font-weight:700;
+  font-size:24px;letter-spacing:1.5px;color:var(--ochre);
+  text-transform:uppercase;
+}
+.digest-overlay-subtitle {
+  font-family:'Baloo 2',sans-serif;font-size:12.5px;font-weight:600;
+  letter-spacing:2px;color:var(--sand);
+  text-transform:uppercase;opacity:0.85;
+}
+/* ── EMPTY-STATE / "COMING SOON" PANELS ── */
+/* (previously also used for the multi-tab lock overlay, now removed) */
+.tab-lock-box {
+  text-align:center;padding:36px 28px;
+  border-radius:var(--pf-card-radius);
+  background:var(--bark);max-width:320px;width:90%;
+}
+.tab-lock-icon { font-size:40px;margin-bottom:16px; }
+.tab-lock-title {
+  font-family:'Baloo 2',sans-serif;font-weight:600;
+  font-size:21px;color:var(--bone);margin-bottom:10px;
+}
+.tab-lock-body {
+  font-size:14px;color:var(--mist);line-height:1.6;margin-bottom:22px;
+}
+.tab-lock-hint {
+  font-family:'Baloo 2',sans-serif;font-size:10px;
+  letter-spacing:1.5px;color:var(--ochre);text-transform:uppercase;
+  border:1px solid rgba(200,134,58,0.35);border-radius:6px;
+  padding:8px 14px;display:inline-block;
+}
+
+.empty-state {
+  text-align:center;padding:30px 20px;
+  color:var(--mist);font-size:14px;line-height:1.7;
+}/* ── WEIGHT LOG ── */
+.weight-log-block {
+  background:var(--bark);
+  border-radius:var(--pf-card-radius);padding:14px;margin-bottom:12px;
+}
+.weight-log-title {
+  font-family:'Baloo 2',sans-serif;font-weight:600;font-size:16px;color:var(--ochre);
+  margin-bottom:12px;display:flex;align-items:center;gap:8px;
+}
+.weight-input-row {
+  display:flex;gap:8px;align-items:flex-end;margin-bottom:12px;
+}
+.weight-input-row input {
+  flex:1;
+}
+.weight-input-row button {
+  flex-shrink:0;width:auto;margin-top:0;padding:9px 16px;
+}
+.weight-hist-item {
+  display:flex;justify-content:space-between;align-items:center;
+  padding:6px 0;border-bottom:1px solid var(--clay);
+  font-size:14px;
+}
+.weight-hist-item:last-child { border-bottom:none; }
+.weight-hist-date { font-family:'Baloo 2',sans-serif;font-size:11px;color:var(--mist); }
+.weight-hist-val { font-family:'Baloo 2',sans-serif;font-size:13px;color:var(--bone); }
+.weight-hist-del { background:none;border:none;color:var(--terra);font-size:14px;cursor:pointer;opacity:0.5;padding:0 4px; }
+.weight-hist-del:hover { opacity:1; }/* ── TRENDS / SEE MORE ── *//* Trends — expand in place below the button */
+.trends-wrap {
+  display:grid;grid-template-rows:0fr;overflow:hidden;
+  transition:grid-template-rows .38s cubic-bezier(.4,0,.2,1);
+  margin-bottom:14px;
+}
+.trends-wrap.open { grid-template-rows:1fr; }
+.trends-wrap > div { min-height:0; }
+.trends-body { padding:4px 0 0; }/* ── Stock-market period bar (Week / Month / Year / Max) ── */
+.prog-period-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  padding: 4px 0 14px;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  position: relative;
+}
+.prog-period-opt {
+  color: rgba(255,255,255,0.78);
+  cursor: pointer;
+  padding: 4px 12px;
+  transition: color 0.18s;
+  user-select: none;
+}
+.prog-period-opt.active {
+  color: var(--pf-accent-orange);
+  filter: brightness(1.25);
+  position: relative;
+}
+.prog-period-indicator {
+  position: absolute;
+  left: 0;
+  bottom: 6px;
+  height: 2px;
+  background: var(--pf-accent-orange);
+  border-radius: 2px;
+  opacity: 0.75;
+  transition: transform .25s cubic-bezier(.4,0,.2,1), width .25s cubic-bezier(.4,0,.2,1);
+  pointer-events: none;
+}
+.prog-period-sep {
+  color: rgba(255,255,255,0.15);
+  font-size: 11px;
+  line-height: 1;
+  pointer-events: none;
+}
+.trends-hdr { display:none; }
+.trends-close { display:none; }
+.trend-card {
+  background:var(--bark);
+  border-radius:var(--pf-card-radius);padding:14px;margin-bottom:14px;
+}
+.trend-card-title {
+  font-family:'Baloo 2',sans-serif;font-size:15px;font-weight:600;
+  letter-spacing:1.2px;color:var(--box-title);text-transform:uppercase;
+  margin-bottom:10px;
+}
+.trend-card-title.tc-gabi,
+.trend-card-title.tc-nacho { color:var(--box-title); }
+/* Small uppercase stat label inside a .trend-card (e.g. "Duration", "Burned").
+   Used to be copy-pasted as an inline style 5x across log.js's workout-entry
+   view; pulled out during the redundancy audit. */
+.trend-stat-label { font-size:11px;color:var(--mist);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px; }
+.box-title {
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  color: var(--box-title);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+/* ── SUBHEADER — shared style for secondary labels (Walking/Cardio/Strength
+   on the Movement card is the reference look). Apply this class anywhere
+   a "subheader" is called for instead of one-off tweaks. ── */
+.subheader {
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--ochre);
+}
+.mini-chart-wrap {
+  position:relative;height:80px;margin-bottom:4px;
+}
+.mini-chart {
+  position:absolute;inset:0;
+}
+.mini-chart-svg { width:100%;height:80px; }
+.mc-axis-label {
+  position:absolute;font-family:'Baloo 2',sans-serif;font-size:9px;
+  color:rgba(255,255,255,0.35);pointer-events:none;white-space:nowrap;
+}
+.chart-labels {
+  display:flex;justify-content:space-between;
+  font-family:'Baloo 2',sans-serif;font-size:9px;color:var(--mist);
+  margin-top:4px;
+}
+.trend-stat-row {
+  display:flex;margin-top:10px;
+  background:var(--soil);
+  border-radius:var(--pf-card-radius);overflow:hidden;
+}
+.trend-stat {
+  flex:1;background:transparent;border:none;
+  border-radius:0;padding:8px 10px;text-align:center;
+  position:relative;
+}
+.trend-stat:not(:last-child)::after {
+  content:'';position:absolute;top:15%;bottom:15%;right:0;
+  width:1px;background:var(--clay);opacity:0.45;
+}
+.trend-stat-val {
+  font-family:'Baloo 2',sans-serif;font-weight:700;font-size:15px;color:var(--bone);
+}
+.trend-stat-lbl {
+  font-family:'Baloo 2',sans-serif;font-size:11px;
+  color:var(--mist);letter-spacing:0.5px;text-transform:uppercase;margin-top:2px;
+}
+.trend-micro-row {
+  display:flex;justify-content:space-between;padding:5px 0;
+  border-bottom:1px solid var(--clay);font-size:14px;
+}
+.trend-micro-row:last-child { border-bottom:none; }
+.trend-micro-lbl { font-family:'Baloo 2',sans-serif;font-size:13px;font-weight:500;color:var(--sand); }
+.trend-micro-val { font-family:'Baloo 2',sans-serif;font-size:14px;font-weight:700; }
+.trend-micro-val.low { color:var(--terra); }
+.trend-micro-val.ok { color:var(--sage); }/* ── WORKOUT TYPE BUTTONS ── */
+/* ── WORKOUT TYPE BUTTONS — the 8-color table ─────────────────────
+   No outline (global — box shape/border is the same for both
+   themes/states: none). Colors, all theme-dependent:
+     1. bg  selected · Gabi  → --pf-accent-orange (#6BA3C8-family orange, Gabi's accent)
+     2. bg  selected · Nacho → --pf-accent-orange (Nacho's ochre-family accent)
+     3. bg  unselected · Gabi  → --pf-toggle-bg
+     4. bg  unselected · Nacho → --pf-toggle-bg
+     5. text selected · Gabi  → --pf-bg
+     6. text selected · Nacho → --pf-bg
+     7. text unselected · Gabi  → --pf-text-muted
+     8. text unselected · Nacho → --pf-text-muted
+   Same 4 tokens as every other toggle in the app — resolving to 8
+   concrete values because the tokens already flip per theme. */
+.wk-type-btn, .wk-type-btn-primary {
+  padding:14px 8px;border-radius:10px;border:none;
+  /* Was var(--pf-toggle-bg), which on Nacho's theme resolves to the exact
+     same color as .step-block's background (--bark) — the buttons were
+     invisible as buttons until tapped. --clay is a step lighter than
+     --bark in both themes, so there's always real contrast against the
+     box they sit in, not just on Gabi (where --pf-toggle-bg happens to
+     be a translucent white overlay and already showed up). */
+  background:var(--clay);color:var(--pf-text-muted);
+  font-family:'Baloo 2',sans-serif;font-size:14px;font-weight:400;
+  cursor:pointer;transition:all .2s;text-align:center;
+}
+.wk-type-btn.selected, .wk-type-btn-primary.selected {
+  background:var(--pf-accent-orange);color:var(--pf-bg);
+}
+@keyframes pulse-red { 0%,100%{box-shadow:0 0 0 0 rgba(196,90,60,0.5);} 50%{box-shadow:0 0 0 6px rgba(196,90,60,0);} }
+.migrate-urgent { background:var(--terra)!important;border-color:var(--terra)!important;color:#fff!important;animation:pulse-red 1.6s infinite; }
+@keyframes glow-green-subtle { 0%{box-shadow:0 0 4px 1px #7ec89a66,0 0 8px 2px #7ec89a44;} 25%{box-shadow:0 0 5px 1px #7ec89a55,0 0 6px 2px #7ec89a33;} 50%{box-shadow:0 0 6px 2px #7ec89a44,0 0 4px 1px #7ec89a22;} 75%{box-shadow:0 0 5px 1px #7ec89a55,0 0 6px 2px #7ec89a33;} 100%{box-shadow:0 0 4px 1px #7ec89a66,0 0 8px 2px #7ec89a44;} }
+@keyframes glow-green-medium { 0%{box-shadow:0 0 5px 2px #7ec89a,0 0 14px 5px #7ec89a99;} 25%{box-shadow:0 0 4px 2px #7ec89acc,0 0 11px 4px #7ec89a77;} 50%{box-shadow:0 0 3px 1px #7ec89a99,0 0 8px 3px #7ec89a55;} 75%{box-shadow:0 0 4px 2px #7ec89acc,0 0 11px 4px #7ec89a77;} 100%{box-shadow:0 0 5px 2px #7ec89a,0 0 14px 5px #7ec89a99;} }
+@keyframes glow-green-strong { 0%{box-shadow:0 0 6px 2px #7ec89a,0 0 18px 6px #7ec89a,0 0 38px 12px #4db87888;} 25%{box-shadow:0 0 5px 2px #7ec89acc,0 0 14px 5px #7ec89add,0 0 28px 9px #4db87866;} 50%{box-shadow:0 0 4px 1px #7ec89aaa,0 0 10px 4px #7ec89a77,0 0 20px 6px #4db87844;} 75%{box-shadow:0 0 5px 2px #7ec89acc,0 0 14px 5px #7ec89add,0 0 28px 9px #4db87866;} 100%{box-shadow:0 0 6px 2px #7ec89a,0 0 18px 6px #7ec89a,0 0 38px 12px #4db87888;} }
+@keyframes glow-red-subtle  { 0%{box-shadow:0 0 4px 1px #cc443366,0 0 10px 3px #cc443344;} 25%{box-shadow:0 0 3px 1px #cc443344,0 0 8px 2px #cc443333;} 50%{box-shadow:0 0 2px 1px #cc443322,0 0 6px 2px #cc443322;} 75%{box-shadow:0 0 3px 1px #cc443344,0 0 8px 2px #cc443333;} 100%{box-shadow:0 0 4px 1px #cc443366,0 0 10px 3px #cc443344;} }
+@keyframes glow-red-strong  { 0%{box-shadow:0 0 5px 2px #cc4433aa,0 0 16px 6px #cc443377,0 0 28px 10px #cc443344;} 25%{box-shadow:0 0 4px 2px #cc443388,0 0 12px 4px #cc443355,0 0 20px 7px #cc443333;} 50%{box-shadow:0 0 3px 1px #cc443366,0 0 8px 3px #cc443344,0 0 14px 5px #cc443322;} 75%{box-shadow:0 0 4px 2px #cc443388,0 0 12px 4px #cc443355,0 0 20px 7px #cc443333;} 100%{box-shadow:0 0 5px 2px #cc4433aa,0 0 16px 6px #cc443377,0 0 28px 10px #cc443344;} }
+.themed-soil-box { background: var(--soil); border-radius: var(--pf-card-radius); }
+
+
+/* ══════════════════════════════════════════════════════════════════
+   WORKOUT — New Workout home screen (enroll/quick-launch + ad-hoc
+   wizard). "Coming soon" panels reuse .tab-lock-box; step wizard
+   reuses .step-block. Everything below is new surface specific to
+   this screen. Colors are the base tokens (--bark/--clay/--ochre/
+   --mist/--bone/--sand/--sage/--soil / --pf-*), which already retheme
+   for Gabi at the root level — no body.person-gabi overrides needed.
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── Sub-tab bar (New Workout | Tracking | Program | Calisthenics) ──
+   Mirrors .prog-period-bar's sliding-underline pattern exactly (see
+   progress.js's positionPeriodIndicator) — same structure, own
+   namespace since it's a different tab-switcher, not a period picker. */
+.wo-tab-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  padding: 4px 0 14px;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  position: relative;
+}
+.wo-tab-opt {
+  color: var(--pf-text-muted);
+  cursor: pointer;
+  padding: 4px 10px;
+  transition: color 0.18s;
+  user-select: none;
+}
+.wo-tab-opt.active { color: var(--pf-accent-orange); position: relative; }
+.wo-tab-indicator {
+  position: absolute;
+  left: 0;
+  bottom: 6px;
+  height: 2px;
+  background: var(--pf-accent-orange);
+  border-radius: 2px;
+  opacity: 0.75;
+  transition: transform .25s cubic-bezier(.4,0,.2,1), width .25s cubic-bezier(.4,0,.2,1);
+  pointer-events: none;
+}
+.wo-tab-sep { color: rgba(255,255,255,0.15); font-size: 11px; line-height: 1; pointer-events: none; }
+
+.wo-ladder { display:flex; gap:4px; margin:4px 0 14px; }
+.wo-ladder-seg { flex:1; height:6px; border-radius:3px; background:transparent; border:1px solid var(--clay); }
+.wo-ladder-done { background:var(--sage); border-color:var(--sage); }
+.wo-ladder-current { background:var(--ochre); border-color:var(--ochre); }
+
+.wo-plan-hdr { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+.wo-plan-name { font-family:'Baloo 2',sans-serif; font-size:15px; font-weight:600; color:var(--bone); }
+.wo-plan-change {
+  font-family:'Baloo 2',sans-serif; font-size:10px; letter-spacing:1px;
+  text-transform:uppercase; color:var(--mist); cursor:pointer; flex-shrink:0;
+}
+.wo-plan-change:hover { color:var(--ochre); }
+
+.wo-quick-card { background:var(--bark); border-radius:var(--pf-card-radius); padding:16px; margin-bottom:14px; }
+.wo-quick-label { font-family:'Baloo 2',sans-serif; font-size:18px; font-weight:600; color:var(--bone); margin:8px 0 2px; }
+.wo-quick-meta { font-size:13px; color:var(--mist); margin-bottom:10px; }
+.wo-quick-hint { font-size:11px; color:var(--mist); text-align:center; margin-top:6px; }
+
+.wo-variant-row { display:flex; gap:8px; margin-bottom:4px; }
+.wo-variant-row .btn { flex:1; margin-top:0; }
+
+.wo-slot-arr {
+  text-align:center; font-family:'Baloo 2',sans-serif; font-size:11px;
+  letter-spacing:1px; text-transform:uppercase; color:var(--mist);
+  cursor:pointer; margin-top:12px; transition:color .2s;
+}
+.wo-slot-arr:hover { color:var(--ochre); }
+.wo-slot-detail-wrap {
+  display:grid; grid-template-rows:0fr; overflow:hidden;
+  transition:grid-template-rows .32s cubic-bezier(.4,0,.2,1);
+}
+.wo-slot-detail-wrap.open { grid-template-rows:1fr; }
+.wo-slot-detail-wrap > div {
+  min-height:0; opacity:0; transform:translateY(-4px);
+  transition:opacity .22s ease .04s, transform .22s ease .04s;
+}
+.wo-slot-detail-wrap.open > div { opacity:1; transform:translateY(0); padding-top:10px; }
+
+.wo-entry-group-label {
+  font-family:'Baloo 2',sans-serif; font-size:10px; letter-spacing:1.5px;
+  text-transform:uppercase; color:var(--ochre); margin:10px 0 4px;
+}
+.wo-entry-group-label:first-child { margin-top:0; }
+.wo-entry-row {
+  display:flex; justify-content:space-between; gap:10px; padding:6px 0;
+  border-top:1px solid var(--clay); font-size:13px;
+}
+.wo-entry-row:first-of-type, .wo-entry-group-label + .wo-entry-row { border-top:none; }
+.wo-entry-name { color:var(--sand); }
+.wo-entry-detail { color:var(--mist); flex-shrink:0; font-family:'Baloo 2',sans-serif; font-size:11px; white-space:nowrap; }
+
+.wo-escape-row { display:flex; flex-direction:column; gap:6px; margin:4px 0 16px; }
+.wo-escape-row span { font-size:12px; color:var(--mist); text-decoration:underline; text-decoration-color:var(--clay); cursor:pointer; }
+.wo-escape-row span:hover { color:var(--ochre); }
+
+.wo-program-card { background:var(--soil); border:1px solid var(--clay); border-radius:12px; padding:12px; margin-bottom:8px; cursor:pointer; }
+.wo-program-name { font-family:'Baloo 2',sans-serif; font-size:15px; font-weight:600; color:var(--bone); margin-bottom:2px; }
+.wo-program-meta { font-size:12px; color:var(--mist); margin-bottom:8px; }
+
+.wo-escape-hdr {
+  font-family:'Baloo 2',sans-serif; font-size:11px; letter-spacing:1px;
+  text-transform:uppercase; color:var(--mist); margin:4px 0 10px;
+}
+
+/* Small top-right toggle for the wizard's Source/Style/Focus picks —
+   reuses .seg.pf-toggle/.seg-opt.pf-toggle-option (same compact pill
+   style as the Vitals Day/Week/Month and Progress category toggles in
+   #hdr-tab-row), just re-scoped here since this one lives inline in the
+   panel instead of the sticky header. */
+.wo-mini-toggle-row { display:flex; justify-content:flex-end; margin-bottom:12px; }
+.wo-mini-toggle-row .seg.pf-toggle { gap:0; margin-bottom:0; flex-wrap:wrap; justify-content:flex-end; }
+
+/* ══════════════════════════════════════════════════════════════════
+   ACTIVE WORKOUT PLAYER — full-screen overlay (#wo-player-panel).
+   Mirrors #entry-detail-panel's fixed/inset/z-index/safe-area
+   conventions, plus a fade+lift transition via .open.
+   ══════════════════════════════════════════════════════════════════ */
+.wo-pl-panel {
+  position: fixed; inset: 0; z-index: 99999;
+  background: var(--soil);
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  opacity: 0; transform: translateY(14px);
+  transition: opacity .22s ease, transform .22s ease;
+}
+.wo-pl-panel.open { opacity: 1; transform: translateY(0); }
+.wo-pl-inner { height: 100%; display: flex; flex-direction: column; overflow: hidden; position: relative; }
+
+/* ── Full-screen YouTube playback — opened from a video row in the player.
+   Sits above the player panel itself so "Done" returns straight to the
+   session, same conceptual step as checking off a set. ── */
+.wo-yt-fullscreen {
+  position: fixed; inset: 0; z-index: 999999; background: #000;
+  display: flex; flex-direction: column;
+}
+.wo-yt-fullscreen-video { flex: 1; position: relative; background: #000; }
+.wo-yt-fullscreen-video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.wo-yt-fullscreen-bar {
+  flex-shrink: 0; display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px calc(12px + env(safe-area-inset-bottom)); background: #000;
+}
+.wo-yt-fullscreen-close { color: var(--mist); font-size: 15px; cursor: pointer; padding: 6px; }
+.wo-yt-fullscreen-bar .btn { width: auto; padding: 10px 28px; margin-top: 0; }
+
+/* ── "+" Add Exercise row at the bottom of the player list — prominent
+   for on-the-fly sessions (it's the main way the workout grows), a small
+   low-key tile for a preloaded workout (an escape hatch, not the point). ── */
+.wo-pl-add-ex-row {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  cursor: pointer; border-radius: 10px; margin: 10px 0 4px;
+}
+.wo-pl-add-ex-prominent {
+  background: var(--soil); border: 1.5px dashed rgba(var(--ochre-rgb), 0.5);
+  padding: 16px; color: var(--ochre); font-family: 'Baloo 2', sans-serif; font-weight: 600; font-size: 15px;
+}
+.wo-pl-add-ex-subtle {
+  padding: 8px; color: var(--mist); font-size: 12px; opacity: 0.7;
+}
+.wo-pl-add-ex-subtle:active { opacity: 1; }
+.wo-pl-add-ex-plus { font-size: 16px; line-height: 1; }
+.wo-pl-add-ex-prominent .wo-pl-add-ex-plus { font-size: 20px; }
+
+/* ── Add Exercise picker — a sheet stacked above the player panel, same
+   z-index tier as the YouTube fullscreen overlay so either can be opened
+   from within an active session. ── */
+.wo-add-ex-overlay { position: fixed; inset: 0; z-index: 999998; background: var(--soil); }
+.wo-add-ex-sheet { height: 100%; display: flex; flex-direction: column; overflow: hidden; }
+.wo-add-ex-sheet .wo-create-scroll { flex: 1; overflow-y: auto; padding: 14px 16px 24px; }
+.wo-add-ex-typed { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--clay); }
+
+.wo-pl-header {
+  display: flex; flex-direction: column; gap: 8px;
+  padding: 14px 16px 12px; border-bottom: 1px solid var(--clay); flex-shrink: 0;
+}
+.wo-pl-header-top { display: flex; align-items: center; gap: 12px; width: 100%; }
+.wo-pl-close { font-size: 18px; color: var(--mist); cursor: pointer; padding: 4px; }
+.wo-pl-title {
+  flex: 1; font-family: 'Baloo 2', sans-serif; font-weight: 600; font-size: 15px;
+  color: var(--bone); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  text-align: center; margin-right: 26px; /* balances the ✕ so title optically centers */
+}
+.wo-pl-total-clock {
+  display: flex; align-items: baseline; gap: 6px; align-self: flex-start;
+  cursor: pointer; user-select: none;
+}
+.wo-pl-total-clock-label {
+  font-family: 'Baloo 2', sans-serif; font-size: 10px; letter-spacing: 1px;
+  text-transform: uppercase; color: var(--mist);
+}
+.wo-pl-total-clock-val {
+  font-family: 'Baloo 2', sans-serif; font-size: 13px; font-weight: 600; color: var(--ochre);
+}
+.wo-pl-total-clock.paused .wo-pl-total-clock-val { color: var(--mist); }
+
+.wo-pl-rows { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 4px 16px 16px; scroll-padding-top: 8px; }
+.wo-pl-exercise-hdr-wrap { margin: 18px 0 8px; }
+.wo-pl-exercise-hdr-wrap:first-child { margin-top: 12px; }
+.wo-pl-exercise-hdr {
+  font-family: 'Baloo 2', sans-serif; font-size: 11px; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--ochre); margin: 0;
+}
+.wo-pl-exercise-imgs { display: flex; gap: 6px; margin-bottom: 8px; }
+.wo-pl-exercise-img {
+  width: 84px; height: 84px; border-radius: 8px;
+  object-fit: cover; flex-shrink: 0; background: var(--soil);
+}
+.wo-pl-exercise-hdr-row {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 10px;
+}
+.wo-pl-skip-ex-link {
+  font-family: 'Baloo 2', sans-serif; font-size: 10px; letter-spacing: 0.5px;
+  text-transform: none; color: var(--mist); text-decoration: underline;
+  cursor: pointer; flex-shrink: 0; white-space: nowrap;
+}
+
+.wo-pl-row {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--bark); border-radius: 12px; padding: 8px; margin-bottom: 6px;
+  transition: opacity .2s;
+}
+.wo-pl-row-thumbs { display: flex; gap: 4px; flex-shrink: 0; }
+.wo-pl-row-thumb { width: 84px; height: 84px; border-radius: 8px; object-fit: cover; background: var(--soil); }
+.wo-pl-row.done { opacity: 0.55; animation: woRowDone .35s ease; }
+
+/* ── CURRENT ROW — the exercise that's up next visibly pops and gets
+   pulled into view (see scrollActiveRowIntoView). Since rows are fully
+   re-rendered on every state change, this animation replays automatically
+   each time a new row becomes current — no extra JS needed to trigger it. */
+.wo-pl-row-current {
+  background: rgba(var(--ochre-rgb), 0.16);
+  box-shadow: 0 0 0 2px var(--ochre);
+  animation: woRowPromote .45s ease;
+}
+@keyframes woRowPromote {
+  0%   { transform: scale(0.95); opacity: 0.6; }
+  60%  { transform: scale(1.015); }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes woRowDone {
+  0%   { transform: scale(1); opacity: 1; }
+  40%  { transform: scale(0.97); }
+  100% { transform: scale(1); opacity: 0.55; }
+}
+.wo-pl-row-main { flex: 1; min-width: 0; }
+.wo-pl-row-top { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 2px; }
+.wo-pl-row-top .wo-pl-exercise-hdr {
+  margin: 0; font-size: 13px; font-weight: 700; color: #fff;
+  min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1;
+}
+.wo-pl-row-top .wo-pl-skip-ex-link { flex-shrink: 0; }
+.wo-pl-set-label { font-size: 12px; font-weight: 400; color: #7fb3e0; }
+.wo-pl-last { font-size: 10px; color: var(--mist); margin-bottom: 3px; }
+.wo-pl-targets-label { font-size: 13px; color: var(--bone); opacity: 0.85; margin-bottom: 2px; }
+.wo-pl-inputs { display: flex; align-items: flex-end; gap: 6px; }
+.wo-pl-input-group { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
+.wo-pl-input-target { font-size: 13px; color: var(--bone); text-align: center; opacity: 0.85; min-height: 16px; }
+.wo-pl-input-group .wo-pl-input {
+  width: 100%; min-width: 0; box-sizing: border-box;
+  background-color: var(--soil) !important; background-image: none;
+  border: 1px solid var(--clay); border-radius: 8px;
+  font: 13px/1.3 'Baloo 2', sans-serif; color: var(--mist); letter-spacing: normal;
+  padding: 10px 6px; text-align: center; box-shadow: none;
+  -webkit-appearance: none; appearance: none;
+}
+.wo-pl-input-group input.wo-pl-input:not(:placeholder-shown) { color: var(--bone); }
+.wo-pl-input-group .wo-pl-input:focus { outline: none; border-color: var(--ochre); }
+.wo-pl-input-group .wo-pl-input::-webkit-inner-spin-button,
+.wo-pl-input-group .wo-pl-input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+.wo-pl-input-group .wo-pl-input::placeholder { color: var(--mist); opacity: 1; }
+.wo-pl-input-group .wo-pl-input span.wo-pl-level-touched { color: var(--bone); }
+.wo-pl-input-group .wo-pl-input span:not(.wo-pl-level-touched) { color: var(--mist); }
+.wo-pl-check {
+  flex-shrink: 0; width: 30px; height: 30px; border-radius: 50%;
+  border: 2px solid var(--clay); background: var(--soil);
+  display: flex; align-items: center; justify-content: center;
+  color: transparent; cursor: pointer; transition: all .15s;
+}
+.wo-pl-check.checked { background: var(--sage); border-color: var(--sage); color: var(--soil); }
+/* Play-triggered rows (pyramid / stretch) are fundamentally different from
+   a plain checkbox: there's nothing to "check off" until the guided flow
+   runs, so the ▶ needs to be visible in its default state too — not just
+   after completion, unlike a manual set row's tap-to-toggle checkmark. */
+.wo-pl-check.play { color: var(--ochre); border-color: var(--ochre); background: rgba(var(--ochre-rgb), 0.12); font-size: 13px; }
+
+/* Stretch rows show ▶ and ✓ side by side — independent play-flow and
+   manual-complete controls, rather than one button that does both. */
+.wo-pl-stretch-actions { display: flex; gap: 8px; flex-shrink: 0; }
+
+/* ── STRETCH AUTO/MANUAL TOGGLE ── */
+.wo-pl-stretch-mode-row { display: flex; flex-shrink: 0; }
+.wo-pl-stretch-mode-toggle {
+  display: flex; background: var(--soil); border: 1px solid var(--clay); border-radius: 999px;
+  padding: 1px; cursor: pointer;
+}
+.wo-pl-stretch-mode-opt {
+  font-size: 9px; letter-spacing: 0.3px; text-transform: uppercase; color: var(--mist);
+  padding: 3px 7px; border-radius: 999px; transition: all .15s;
+}
+.wo-pl-stretch-mode-opt.active { background: var(--ochre); color: var(--soil); font-weight: 600; }
+
+/* ── HERO — current-exercise reference pics pinned at the top ── */
+.wo-pl-hero { position: relative; margin-top: 4px; display: flex; gap: 4px; justify-content: center; transition: filter .4s ease; }
+.wo-pl-hero-img { width: 57.5vw; max-width: 207px; aspect-ratio: 1 / 1; height: auto; object-fit: cover; border-radius: 8px; display: block; background: var(--soil); }
+.wo-pl-hero-name {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(transparent, rgba(0,0,0,0.75));
+  color: var(--bone); font-family: 'Baloo 2', sans-serif; font-weight: 700; font-size: 14px;
+  padding: 18px 10px 8px;
+}
+
+.wo-pl-rest-banner {
+  display: flex; align-items: center; gap: 10px; justify-content: center;
+  background: rgba(var(--ochre-rgb), 0.14); border-top: 1px solid rgba(var(--ochre-rgb), 0.3);
+  padding: 10px 16px; flex-shrink: 0;
+}
+.wo-pl-rest-label { font-size: 12px; color: var(--ochre); }
+.wo-pl-rest-clock { font-family: 'Baloo 2', sans-serif; font-weight: 600; color: var(--ochre); font-size: 15px; }
+.wo-pl-rest-skip {
+  font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--mist);
+  border: 1px solid var(--clay); border-radius: 8px; padding: 4px 10px; cursor: pointer; background: none;
+}
+
+/* ── PHASE SECTION HEADERS — Warmup / Main Workout / Stretch ── */
+.wo-pl-phase-hdr {
+  font-family: 'Baloo 2', sans-serif; font-weight: 700; font-size: 13px;
+  letter-spacing: 2px; text-transform: uppercase; color: var(--bone);
+  margin: 22px 0 10px; padding-bottom: 6px; border-bottom: 1px solid var(--clay);
+}
+.wo-pl-phase-hdr:first-child { margin-top: 4px; }
+
+/* ── WARMUP ROW — hold-to-complete, prevents accidental skipping ── */
+.wo-pl-warmup .wo-pl-set-label { color: var(--bone); font-size: 14px; font-weight: 600; line-height: 1.4; }
+.wo-pl-hold-caption {
+  font-size: 11px; color: var(--mist); margin-top: 4px;
+  user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;
+}
+/* "TAP" cue next to the hold button — static, no motion/glow, so it just
+   reads as a plain label next to the button rather than competing for
+   attention with the hold animation itself. */
+.wo-pl-warmup-tap {
+  flex-shrink: 0; font-family: 'Baloo 2', sans-serif; font-weight: 700;
+  font-size: 26px; letter-spacing: 1px; color: #fff;
+  user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;
+}
+/* Thumb-sized hold button — fingerprint.png / fingerprintwhite.png,
+   crossfaded by state, over a liquid fill that rises from the bottom as
+   the 3s hold progresses. Idle = white print on a dark disc; mid-hold =
+   print swaps to the black print as green fill rises behind it; done =
+   fully filled, print stays black. */
+.wo-pl-hold-btn {
+  position: relative; flex-shrink: 0; overflow: hidden;
+  width: 72px; height: 72px; border-radius: 50%;
+  background: var(--bark); box-shadow: inset 0 0 0 1px var(--clay);
+  padding: 0; border: none;
+  cursor: pointer; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;
+  display: flex; align-items: center; justify-content: center;
+}
+.wo-pl-hold-btn.checked { box-shadow: inset 0 0 0 1px #6BE58A; }
+/* Both prints are stacked in the same spot (inset:0 + auto margins centers
+   a smaller fixed-size box within it) and crossfade via opacity — simpler
+   and more robust than recoloring one image, and sidesteps any CORS mask
+   quirks entirely since these are plain <img> elements. */
+.wo-pl-hold-fp {
+  position: absolute; inset: 0; z-index: 2; pointer-events: none;
+  width: 58%; height: 58%; margin: auto; object-fit: contain;
+  transition: opacity .15s ease;
+}
+.wo-pl-hold-fp-white { opacity: 1; }
+.wo-pl-hold-fp-black { opacity: 0; }
+.wo-pl-hold-btn.pressing .wo-pl-hold-fp-white,
+.wo-pl-hold-btn.checked .wo-pl-hold-fp-white { opacity: 0; }
+.wo-pl-hold-btn.pressing .wo-pl-hold-fp-black,
+.wo-pl-hold-btn.checked .wo-pl-hold-fp-black { opacity: 1; }
+/* Liquid fill — rises from the bottom of the disc over the 3s hold (JS
+   animates height 0% → 100%), instead of the old rectangular width sweep,
+   so the whole button reads as "filling up" rather than a progress bar. */
+.wo-pl-warmup-fill {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 0%; z-index: 1;
+  background: linear-gradient(180deg, rgba(107,229,138,0.55) 0%, rgba(107,229,138,0.92) 100%);
+}
+.wo-pl-hold-btn.checked .wo-pl-warmup-fill { height: 100%; background: #6BE58A; }
+/* Full-screen effect while holding the warmup button — like gaining life in
+   a game, but bigger: a gradually-brightening wash across the whole screen
+   (opacity driven from JS, in lockstep with the 3s fill) plus a set of
+   crisp, un-blurred rings that continuously pulse outward from the center,
+   as if the hold itself is radiating. Fixed + pointer-events:none so it
+   never blocks the hold itself. */
+.wo-warmup-glow {
+  /* z-index bumped to sit above every other fixed overlay in the app
+     (toast 9999999, youtube fullscreen 999999, add-exercise 999998,
+     confirm dialogs 999996, entry-detail/cooking-mode 99999) so the
+     glow is never occluded regardless of what else happens to be
+     mounted in the DOM while the warmup hold is running.
+     .wo-pl-panel.open animates via `transform`, which promotes it to
+     its own GPU compositing layer — on WebKit/iOS a plain (non-layered)
+     fixed sibling can paint BEHIND a transform-promoted layer even with
+     a much higher z-index. Forcing this element onto its own layer too
+     (translateZ(0) + will-change) keeps layer order honoring z-index. */
+  position: fixed; inset: 0; z-index: 2147483647; pointer-events: none;
+  transform: translateZ(0); will-change: opacity;
+  opacity: 0;
+  background: radial-gradient(circle at 50% 60%,
+    rgba(255,255,255,1) 0%,
+    rgba(var(--ochre-rgb),0.95) 28%,
+    rgba(var(--ochre-rgb),0.78) 58%,
+    rgba(var(--ochre-rgb),0.55) 100%);
+}
+/* A plain white pop layered on top of the wash — only lit up for the .boop
+   finish below, so it doesn't compete with the wash's own color for the
+   full 3s, just at the very end. */
+.wo-warmup-glow::after {
+  content: ''; position: absolute; inset: 0; z-index: 1; background: #fff; opacity: 0;
+}
+/* Rings — crisp solid-color circles (no blur/box-shadow feathering) that
+   scale up from a point at the center of the screen and fade out as they
+   grow, looping continuously while .active. Three of them, staggered, so
+   a new one is always "steaming" outward. */
+.wo-warmup-ring {
+  position: absolute; left: 50%; top: 60%; width: 30px; height: 30px;
+  margin: -15px 0 0 -15px; border-radius: 50%; z-index: 2;
+  border: 3px solid rgba(255,255,255,0.95);
+  opacity: 0;
+  animation: woWarmupRingOut 1.6s ease-out infinite;
+  animation-play-state: paused;
+}
+.wo-warmup-glow.active .wo-warmup-ring { animation-play-state: running; }
+.wo-warmup-ring:nth-child(2) { animation-delay: .5s;  border-color: rgba(var(--ochre-rgb),1); }
+.wo-warmup-ring:nth-child(3) { animation-delay: 1s;   border-color: rgba(255,255,255,0.8); }
+@keyframes woWarmupRingOut {
+  0%   { transform: scale(0.15); opacity: 0.95; }
+  70%  { opacity: 0.4; }
+  100% { transform: scale(34); opacity: 0; }
+}
+/* The "boop" finish — fired once, right as the hold completes. A fast
+   white flash pop plus a single quick shockwave ring, both much snappier
+   than the steady pulsing rings above, so the hold has a clear, punchy
+   ending instead of just fading out. Paired with a haptic buzz in JS. */
+.wo-warmup-glow.boop::after { animation: woWarmupBoopFlash .45s ease-out forwards; }
+@keyframes woWarmupBoopFlash {
+  0%   { opacity: 0.9; }
+  100% { opacity: 0; }
+}
+.wo-warmup-boop {
+  position: absolute; left: 50%; top: 60%; width: 30px; height: 30px;
+  margin: -15px 0 0 -15px; border-radius: 50%; z-index: 2;
+  border: 8px solid #fff;
+  opacity: 0;
+}
+.wo-warmup-glow.boop .wo-warmup-boop {
+  animation: woWarmupBoopRing .55s cubic-bezier(.16,1,.3,1) forwards;
+}
+@keyframes woWarmupBoopRing {
+  0%   { transform: scale(0.15); opacity: 1; }
+  55%  { opacity: 0.9; }
+  100% { transform: scale(48); opacity: 0; }
+}
+
+/* ── TOP TIMER BAR — rest / stretch positioning & hold / pyramid ──
+   Fixed between the header and the row list — not a full-screen overlay —
+   so the rest of the workout stays visible and usable while it runs.
+   Split into two independently-animated pieces:
+   - .wo-bigtimer-collapse: the flat label/skip/sub/actions content, whose
+     height animates via the grid 0fr→1fr trick — this is what makes the
+     row list slide smoothly into place instead of snapping the instant a
+     rest timer starts or ends.
+   - .wo-bigtimer-donut-wrap: the ring, positioned absolutely so it never
+     factors into that height animation. It's deliberately oversized and
+     pulled up so it sits roughly centered over the hero photo pair above
+     it (see --donut-overlap) rather than just grazing the bottom edge —
+     the hero photos get blurred/darkened behind it (via :has() below) so
+     the timer reads as the clear focal point the moment it appears. */
+.wo-bigtimer {
+  flex-shrink: 0; position: relative; z-index: 5;
+  --donut-d: clamp(128px, 36vw, 172px);
+  --donut-overlap: 96px;
+}
+.wo-bigtimer-collapse {
+  display: grid; grid-template-rows: 0fr;
+  transition: grid-template-rows .35s ease;
+  background: var(--bark);
+}
+.wo-bigtimer.wo-bigtimer-active .wo-bigtimer-collapse { grid-template-rows: 1fr; }
+.wo-bigtimer-content {
+  min-height: 0; overflow: hidden;
+  display: flex; flex-direction: column; gap: 4px;
+  padding: 0 10px;
+}
+.wo-bigtimer.wo-bigtimer-active .wo-bigtimer-content { padding: 8px 10px; }
+.wo-bigtimer.paused .wo-bigtimer-collapse { background: var(--clay); }
+.wo-bigtimer-top { display: flex; align-items: center; gap: 6px; min-height: 32px; }
+/* This is the exercise/position name ("Hold Cobra Stretch for 30s") — the
+   whole point of a guided rest/hold step, so it reads as a headline, not
+   a small eyebrow caption. */
+.wo-bigtimer-label {
+  font-family: 'Baloo 2', sans-serif; font-weight: 700; font-size: 15px;
+  color: var(--bone); line-height: 1.2; flex: 1; min-width: 0;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.wo-bigtimer.paused .wo-bigtimer-label { color: var(--mist); }
+/* Reserves the horizontal gap the donut visually sits over — the donut
+   itself lives outside this row (see .wo-bigtimer-donut-wrap below) so it
+   can overflow the bar's edges, but the label/skip either side still need
+   to leave room for it. */
+.wo-bigtimer-clockspacer { flex-shrink: 0; width: var(--donut-d); }
+
+/* ── DONUT RING — a floating badge, not boxed into the bar ──
+   Anchored with a fixed upward overlap past the header/hero boundary
+   (bottom: var(--donut-overlap)) so it rises up to roughly the vertical
+   center of the hero photos above it, big enough to be the clear focal
+   point rather than a small badge peeking over the edge.
+   Enter/exit is a vertical slide rather than a scale: it rests at
+   translateY(0), and animates from/to a translateY offset that reads as
+   "tucked in below" — sliding up into place when it appears, sliding
+   back down out of sight when it's dismissed. */
+.wo-bigtimer-donut-wrap {
+  position: absolute; left: 50%; bottom: var(--donut-overlap);
+  transform: translateX(-50%) translateY(56px);
+  width: var(--donut-d); opacity: 0;
+  transition: transform .45s cubic-bezier(.34, 1.56, .64, 1), opacity .35s ease;
+  pointer-events: none;
+}
+.wo-bigtimer.wo-bigtimer-active .wo-bigtimer-donut-wrap {
+  transform: translateX(-50%) translateY(0); opacity: 1; pointer-events: auto;
+}
+/* Darkens/blurs the hero photos behind the badge for as long as it's
+   showing, so the timer reads as sitting in front of the picture rather
+   than just overlapping it. :has() lets the (earlier, in source order)
+   hero element react to the (later) timer's active state with no JS
+   coordination needed. */
+.wo-pl-hero:has(+ .wo-bigtimer.wo-bigtimer-active) {
+  filter: blur(9px) brightness(0.55);
+}
+.wo-bigtimer-donut {
+  position: relative; width: 100%; aspect-ratio: 1 / 1;
+  display: flex; align-items: center; justify-content: center;
+}
+/* Solid backing disc behind the ring/number so the photo underneath never
+   shows through the middle — this is what makes the badge read as solid
+   rather than a transparent ring laid over the picture. */
+.wo-bigtimer-donut::before {
+  content: ''; position: absolute; inset: 2%; border-radius: 50%;
+  background: var(--bark);
+}
+.wo-bigtimer.paused .wo-bigtimer-donut::before { background: var(--clay); }
+.wo-bigtimer-donut-svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+.wo-bigtimer-donut-track, .wo-bigtimer-donut-fill {
+  fill: none; stroke-width: 11;
+}
+.wo-bigtimer-donut-track { stroke: var(--clay); }
+.wo-bigtimer-donut-fill {
+  stroke: var(--ochre); stroke-linecap: round;
+  stroke-dasharray: 276.46; stroke-dashoffset: 276.46;
+  transition: stroke-dashoffset 1s linear;
+}
+.wo-bigtimer.paused .wo-bigtimer-donut-fill { stroke: var(--mist); transition: none; }
+.wo-bigtimer-num {
+  position: relative; font-family: 'Baloo 2', sans-serif; font-weight: 700; font-size: 34px;
+  color: var(--ochre); line-height: 1;
+}
+.wo-bigtimer.paused .wo-bigtimer-num { color: var(--mist); }
+.wo-bigtimer-sub { font-size: 12px; color: var(--mist); }
+
+/* ── SKIP SLOT — compact pill sitting inline on the right of the top row,
+   right next to what it skips, instead of a full-width row underneath. */
+.wo-bigtimer-skipwrap:empty { display: none; }
+.wo-bigtimer-skipwrap { flex: 1; display: flex; justify-content: flex-end; }
+.wo-bigtimer-skip-main {
+  display: block;
+  font-family: 'Baloo 2', sans-serif; font-weight: 600; font-size: 10px;
+  border-radius: 999px; padding: 5px 8px; border: 1px solid var(--clay);
+  background: var(--soil); color: var(--mist); cursor: pointer; white-space: nowrap;
+}
+.wo-bigtimer-skip-main:active { background: var(--clay); }
+
+.wo-bigtimer-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.wo-bigtimer-tick, .wo-bigtimer-max {
+  font-family: 'Baloo 2', sans-serif; font-weight: 600; font-size: 13px;
+  border-radius: 10px; padding: 10px 16px; border: none; cursor: pointer;
+}
+.wo-bigtimer-tick { background: var(--sage); color: var(--soil); }
+.wo-bigtimer-max { background: var(--ochre); color: var(--soil); }
+
+/* ── PAUSE/PLAY — sits just outside the donut ring's lower-right edge,
+   anchored to the donut itself (not the bar), so it stays a one-tap reach
+   right next to the number without ever sitting inside the ring's
+   fill/track. No label; the glyph (❚❚ / ▶) is the whole point at this
+   size. */
+.wo-bigtimer-pausebtn {
+  position: absolute; bottom: 2%; right: -6%; transform: translate(0, 0);
+  flex-shrink: 0; width: 38px; height: 38px; border-radius: 50%;
+  border: 1px solid var(--clay); background: var(--bark); color: var(--bone);
+  font-size: 16px; line-height: 1; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; z-index: 1;
+}
+.wo-bigtimer-pausebtn:active { background: var(--clay); }
+.wo-bigtimer.paused .wo-bigtimer-pausebtn { color: var(--ochre); border-color: var(--ochre); }
+
+
+/* ── STRETCH PHASE CONTROLS — explicit Start button + hold-3s skip-all ── */
+.wo-pl-stretch-controls {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  flex-wrap: wrap; margin: 0 0 14px;
+}
+.wo-pl-start-stretch-btn {
+  font-family: 'Baloo 2', sans-serif; font-weight: 600; font-size: 13px;
+  background: var(--sage); color: var(--soil); border: none; border-radius: 10px;
+  padding: 10px 18px; cursor: pointer;
+}
+.wo-pl-skip-stretch-hold {
+  position: relative; overflow: hidden; flex-shrink: 0;
+  padding: 10px 14px; border-radius: 10px; border: 2px solid var(--clay);
+  font-size: 12px; color: var(--mist); cursor: pointer; user-select: none; text-align: center;
+}
+.wo-pl-skip-stretch-hold span { position: relative; z-index: 1; }
+.wo-pl-skip-stretch-hold .wo-pl-hold-fill {
+  position: absolute; inset: 0; width: 0%; background: rgba(var(--ochre-rgb), 0.35); z-index: 0;
+}
+
+/* ── SIMPLE CONFIRM/PROMPT DIALOG — leave-confirm, stretch prompt ── */
+.wo-confirm-overlay {
+  position: fixed; inset: 0; z-index: 999996; background: rgba(0,0,0,0.6);
+  display: flex; align-items: center; justify-content: center; padding: 20px;
+}
+.wo-confirm-box {
+  background: var(--bark); border-radius: 16px; padding: 22px; max-width: 340px; width: 100%;
+  text-align: center;
+}
+.wo-confirm-title { font-family: 'Baloo 2', sans-serif; font-weight: 600; font-size: 16px; color: var(--bone); margin-bottom: 8px; }
+.wo-confirm-body { font-size: 13px; color: var(--mist); margin-bottom: 18px; }
+.wo-confirm-actions { display: flex; gap: 10px; }
+.wo-confirm-cancel { margin-top: 14px; font-size: 12px; color: var(--mist); text-decoration: underline; cursor: pointer; }
+/* wo-confirm-backdrop/-card were referenced by the leave-confirm dialog
+   but never had any rules, so that dialog rendered unstyled and off-screen
+   — same family of bug as the overlay z-index fix above, fixed here too. */
+.wo-confirm-backdrop {
+  position: fixed; inset: 0; z-index: 999996; background: rgba(0,0,0,0.6);
+  display: flex; align-items: center; justify-content: center; padding: 20px;
+}
+.wo-confirm-card {
+  background: var(--bark); border-radius: 16px; padding: 22px; max-width: 340px; width: 100%;
+  text-align: center;
+}
+.wo-confirm-backdrop .wo-confirm-title { margin-bottom: 16px; }
+.wo-confirm-backdrop .wo-confirm-actions { flex-direction: column; gap: 8px; }
+
+.wo-pl-footer {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 12px 16px; border-top: 1px solid var(--clay); flex-shrink: 0;
+}
+.wo-pl-footer .btn { flex: 1; margin-top: 0; }
+.wo-pl-abandon { font-size: 11px; color: var(--mist); text-decoration: underline; cursor: pointer; flex-shrink: 0; }
+
+.wo-pl-complete {
+  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: 32px;
+}
+.wo-pl-complete-emoji { font-size: 44px; margin-bottom: 12px; }
+.wo-pl-complete-title { font-family: 'Baloo 2', sans-serif; font-weight: 600; font-size: 20px; color: var(--bone); margin-bottom: 10px; }
+.wo-pl-complete-stats { font-size: 13px; color: var(--mist); margin-bottom: 6px; }
+.wo-pl-est { font-size: 10px; opacity: 0.7; }
+.wo-pl-complete .btn { margin-top: 22px; min-width: 160px; }
+
+/* ── TRACKING sub-tab: exercise picker + progress chart + history ── */
+.wo-track-select-row { margin-bottom: 14px; }
+.wo-track-select {
+  width: 100%; background: var(--bark); border: 1px solid var(--clay); border-radius: 10px;
+  color: var(--bone); font-family: 'Baloo 2', sans-serif; font-size: 14px; padding: 10px 12px;
+}
+.wo-chart-card { background: var(--bark); border-radius: var(--pf-card-radius); padding: 16px; margin-bottom: 16px; }
+.wo-chart-latest { font-family: 'Baloo 2', sans-serif; font-size: 22px; font-weight: 600; color: var(--bone); margin-bottom: 8px; }
+.wo-chart-unit { font-size: 12px; font-weight: 400; color: var(--mist); }
+.wo-chart-svg { width: 100%; height: 110px; display: block; }
+.wo-chart-axis { display: flex; justify-content: space-between; font-size: 10px; color: var(--mist); margin-top: 4px; }
+
+.wo-track-hist-hdr {
+  font-family: 'Baloo 2', sans-serif; font-size: 11px; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--mist); margin: 4px 0 8px;
+}
+.wo-hist-row { display: flex; gap: 12px; padding: 10px 0; border-top: 1px solid var(--clay); }
+.wo-hist-row:first-child { border-top: none; }
+.wo-hist-date { font-family: 'Baloo 2', sans-serif; font-size: 11px; color: var(--mist); flex-shrink: 0; width: 72px; }
+.wo-hist-main { flex: 1; min-width: 0; }
+.wo-hist-name { font-size: 13px; color: var(--bone); }
+.wo-hist-meta { font-size: 11px; color: var(--mist); margin-top: 2px; }
+
+/* ══════════════════════════════════════════════════════════════════
+   WORKOUT TAB REDESIGN — hero (next program workout) + search +
+   filters + workout library list. Program management moved entirely
+   to the Program tab (circular progress ring + available programs).
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── Hero: "Next Program Workout" ── */
+.wo-hero-card { background: var(--bark); border-radius: var(--pf-card-radius); padding: 18px; margin-bottom: 16px; text-align: center; }
+.wo-hero-eyebrow {
+  font-family: 'Baloo 2', sans-serif; font-size: 10px; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--ochre); margin-bottom: 8px;
+}
+.wo-hero-program { font-family: 'Baloo 2', sans-serif; font-weight: 600; font-size: 19px; color: var(--bone); }
+.wo-hero-day { font-size: 12px; color: var(--mist); margin-top: 2px; margin-bottom: 14px; }
+.wo-hero-card .btn { width: 100%; }
+
+.wo-tag-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+.wo-tag {
+  font-family: 'Baloo 2', sans-serif; font-size: 11px; letter-spacing: 0.5px;
+  color: var(--ochre); background: rgba(var(--ochre-rgb), 0.12);
+  border: 1px solid rgba(var(--ochre-rgb), 0.3); border-radius: 6px; padding: 3px 9px;
+}
+.wo-tag-sep { color: var(--clay); font-size: 11px; }
+
+/* ── Search — dark, full width, always visible ── */
+.wo-search-input {
+  width: 100%; background: var(--soil); border: 1px solid var(--clay); border-radius: 10px;
+  color: var(--bone); font-size: 14px; padding: 11px 14px; margin-bottom: 12px;
+}
+.wo-search-input::placeholder { color: var(--mist); }
+.wo-search-input:focus { outline: none; border-color: var(--ochre); }
+
+/* ── Category grid (New Workout home, no search active) — 2x2 image tiles.
+   These classes were referenced by renderWorkoutCategoryGrid()/
+   renderWorkoutCategoryList() in workout.js but never defined here, so a
+   tile rendered as a bare <img> at its natural size with no grid, no crop,
+   and no label — the "fills the whole screen" bug. Fixed to a fixed-
+   aspect, cropped, 2-column grid matching the .meal-card image pattern
+   used elsewhere. ── */
+.wo-category-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 4px;
+}
+.wo-category-tile {
+  position: relative; width: 100%; aspect-ratio: 4 / 3; overflow: hidden;
+  border-radius: var(--pf-card-radius); background: var(--clay); cursor: pointer;
+}
+.wo-category-tile img {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block;
+}
+.wo-category-tile-fade {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.05) 55%, rgba(0,0,0,0) 75%);
+}
+.wo-category-tile-label {
+  position: absolute; left: 10px; bottom: 9px; right: 10px;
+  font-family: 'Baloo 2', sans-serif; font-size: 15px; font-weight: 600;
+  color: var(--bone); text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+}
+.wo-category-back {
+  font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.5px;
+  color: var(--ochre); cursor: pointer; margin-bottom: 12px;
+}
+.wo-category-section { margin-bottom: 18px; }
+.wo-category-section-title {
+  font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 1.5px;
+  color: var(--mist); text-transform: uppercase; margin-bottom: 6px;
+}
+
+/* ── Create Workout page layout — name/desc header and the Cancel/Save
+   action bar stay fixed; only the middle (queue + search + exercise list)
+   scrolls, contained within the panel instead of leaking to the page
+   underneath. Mirrors the .wo-pl-rows flex:1/overflow-y:auto pattern used
+   by the other wo-pl-panel screens. ── */
+.wo-create-header {
+  flex-shrink: 0; padding: 12px 16px; border-bottom: 1px solid var(--clay);
+}
+.wo-create-name-input {
+  width: 100%; background: var(--soil); border: 1px solid var(--clay); border-radius: 10px;
+  color: var(--bone); font-family: 'Baloo 2', sans-serif; font-size: 16px; font-weight: 600;
+  padding: 11px 14px; margin-bottom: 8px;
+}
+.wo-create-name-input::placeholder { color: var(--mist); font-weight: 400; }
+.wo-create-name-input:focus { outline: none; border-color: var(--ochre); }
+.wo-create-name-input.wo-input-error {
+  border-color: var(--status-red-strong); animation: woInputShake .35s ease;
+}
+@keyframes woInputShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+.wo-create-desc-input {
+  width: 100%; background: var(--soil); border: 1px solid var(--clay); border-radius: 10px;
+  color: var(--sand); font-family: 'Inter', sans-serif; font-size: 13px;
+  padding: 9px 12px; resize: vertical; min-height: 38px;
+}
+.wo-create-desc-input::placeholder { color: var(--mist); }
+.wo-create-desc-input:focus { outline: none; border-color: var(--ochre); }
+.wo-create-scroll {
+  flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch;
+  padding: 12px 16px 16px;
+}
+.wo-queue-wrap:empty { display: none; }
+.wo-queue-hdr {
+  font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 1.5px;
+  color: var(--mist); text-transform: uppercase; margin-bottom: 6px;
+}
+.wo-queue-list { margin-bottom: 14px; }
+.wo-queue-scroll { max-height: 240px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+.wo-queue-row {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--soil); border: 1px solid var(--clay); border-radius: 10px;
+  padding: 8px 10px; margin-bottom: 6px;
+}
+.wo-queue-handle { color: var(--mist); cursor: grab; flex-shrink: 0; touch-action: none; }
+.wo-queue-main { flex: 1; min-width: 0; }
+.wo-queue-name {
+  font-family: 'Baloo 2', sans-serif; font-size: 13px; color: var(--bone);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.wo-queue-meta {
+  font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.5px;
+  color: var(--mist); text-transform: uppercase; margin-top: 2px;
+}
+.wo-queue-remove { color: var(--mist); cursor: pointer; flex-shrink: 0; padding: 4px; }
+.wo-queue-remove:hover { color: var(--terra); }
+.wo-create-actionbar {
+  flex-shrink: 0; padding: 12px 16px; border-top: 1px solid var(--clay);
+  padding-bottom: calc(12px + env(safe-area-inset-bottom));
+}
+.wo-create-actionbar-count {
+  font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 1px;
+  color: var(--mist); text-transform: uppercase; text-align: center; margin-bottom: 8px;
+}
+.wo-create-actionbar-row { display: flex; gap: 8px; }
+.wo-create-actionbar-row .btn { margin-top: 0; }
+
+/* ── Filters — regular rectangular buttons, NOT pills ── */
+.wo-filter-row { display: flex; gap: 8px; margin-bottom: 14px; }
+
+/* ── Search + inline YouTube URL insert (Create Workout page) — search
+   drops to half width so the URL field fits beside it. ── */
+.wo-create-search-row { display: flex; gap: 8px; margin-bottom: 12px; }
+.wo-search-input-half { flex: 1; margin-bottom: 0; }
+.wo-yt-inline-add { flex: 1; display: flex; align-items: center; gap: 6px; }
+.wo-yt-inline-thumb {
+  flex-shrink: 0; width: 36px; height: 36px; border-radius: 8px; object-fit: cover;
+  background: var(--bark); border: 1px solid var(--clay);
+}
+.wo-yt-inline-input {
+  flex: 1; min-width: 0; background: var(--soil); border: 1px solid var(--clay); border-radius: 10px;
+  color: var(--bone); font-size: 12px; padding: 11px 10px;
+}
+.wo-yt-inline-input::placeholder { color: var(--mist); }
+.wo-yt-inline-input:focus { outline: none; border-color: var(--ochre); }
+.wo-yt-inline-btn {
+  flex-shrink: 0; width: 40px; border-radius: 10px; border: 1px solid var(--clay);
+  background: var(--bark); color: var(--ochre); font-size: 18px; cursor: pointer;
+}
+
+/* ── Save wizard (global rest / per-exercise reps / review) — reuses
+   .wo-pl-header/.wo-create-scroll/.wo-create-actionbar chrome from the
+   catalog screen so all four steps feel like one continuous flow. ── */
+.wo-wizard-intro { color: var(--mist); font-size: 13px; line-height: 1.5; margin-bottom: 18px; }
+.wo-review-global-rest {
+  background: var(--soil); border: 1px solid var(--clay); border-radius: 10px;
+  padding: 12px 14px 2px; margin-bottom: 16px;
+}
+.wo-review-global-rest .wo-wizard-field { margin-bottom: 12px; }
+.wo-wizard-field { margin-bottom: 16px; }
+.wo-wizard-label {
+  display: block; font-family: 'JetBrains Mono', monospace; font-size: 10px;
+  letter-spacing: 1px; text-transform: uppercase; color: var(--mist); margin-bottom: 6px;
+}
+.wo-wizard-input {
+  width: 100%; background: var(--soil); border: 1px solid var(--clay); border-radius: 10px;
+  color: var(--bone); font-size: 14px; padding: 11px 14px;
+}
+.wo-wizard-input:focus { outline: none; border-color: var(--ochre); }
+.wo-wizard-ex-card { text-align: center; margin-bottom: 20px; }
+.wo-wizard-ex-img { width: 140px; height: 140px; border-radius: 12px; object-fit: cover; background: var(--soil); margin-bottom: 10px; }
+.wo-wizard-ex-name { font-family: 'Baloo 2', sans-serif; font-size: 17px; font-weight: 600; color: var(--bone); }
+
+.wo-review-row {
+  background: var(--soil); border: 1px solid var(--clay); border-radius: 10px;
+  padding: 10px 12px; margin-bottom: 8px;
+}
+.wo-review-name { font-family: 'Baloo 2', sans-serif; font-size: 14px; color: var(--bone); margin-bottom: 6px; }
+.wo-review-meta { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.5px; color: var(--mist); text-transform: uppercase; }
+.wo-review-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.wo-review-grid label { font-size: 10px; color: var(--mist); text-transform: uppercase; letter-spacing: 0.5px; }
+.wo-review-grid input {
+  display: block; width: 100%; margin-top: 3px; background: var(--bark); border: 1px solid var(--clay);
+  border-radius: 6px; color: var(--bone); font-size: 13px; padding: 6px 8px;
+}
+.wo-review-grid input:focus { outline: none; border-color: var(--ochre); }
+
+/* ── Exercise picker rows (Create Workout) — compact list with a larger,
+   clearly visible thumbnail, so 4-5 rows are visible at once instead of
+   one full-size image per exercise. ── */
+.wo-ex-card {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--soil); border: 1px solid var(--clay); border-radius: 10px;
+  padding: 8px 10px; margin-bottom: 8px;
+}
+.wo-ex-card-thumb {
+  width: 88px; height: 88px; border-radius: 8px;
+  object-fit: cover; flex-shrink: 0; background: var(--soil);
+}
+.wo-ex-card-thumb-empty {
+  width: 88px; height: 88px; border-radius: 8px; flex-shrink: 0;
+  background: var(--soil); color: var(--mist);
+  display: flex; align-items: center; justify-content: center; font-size: 14px;
+}
+.wo-ex-card-main { flex: 1; min-width: 0; }
+.wo-ex-card-name {
+  font-family: 'Baloo 2', sans-serif; font-size: 14px; color: var(--bone);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.wo-ex-card-meta {
+  font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.5px;
+  color: var(--mist); text-transform: uppercase; margin-top: 2px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.wo-ex-toggle-btn {
+  width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0; padding: 0;
+  border: 1px solid var(--clay); background: var(--bark); color: var(--ochre);
+  font-size: 16px; line-height: 1; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+.wo-ex-toggle-btn.added { background: var(--sage); color: var(--soil); border-color: var(--sage); }
+.wo-filter-col { flex: 1; position: relative; }
+.wo-filter-btn {
+  width: 100%; background: var(--bark); border: 1px solid var(--clay); border-radius: 8px;
+  color: var(--mist); font-family: 'Baloo 2', sans-serif; font-size: 11px;
+  letter-spacing: 0.3px; padding: 9px 6px; cursor: pointer; transition: all 0.15s;
+}
+.wo-filter-btn.active { color: var(--ochre); border-color: rgba(var(--ochre-rgb), 0.5); }
+.wo-filter-checklist {
+  position: absolute; top: calc(100% + 6px); left: 0; right: 0; z-index: 20;
+  background: var(--bark); border: 1px solid var(--clay); border-radius: 10px;
+  padding: 8px; box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+}
+.wo-filter-check-row {
+  display: flex; align-items: center; gap: 8px; padding: 7px 6px; font-size: 13px;
+  color: var(--bone); cursor: pointer; border-radius: 6px;
+}
+.wo-filter-check-row:hover { background: var(--soil); }
+.wo-filter-check-row input { accent-color: var(--ochre); width: 15px; height: 15px; flex-shrink: 0; }
+
+/* ── Workout library list ── */
+.wo-list-row {
+  background: var(--soil); border: 1px solid var(--clay); border-radius: 10px;
+  padding: 12px 10px; margin-bottom: 8px; cursor: pointer;
+}
+.wo-list-name { font-family: 'Baloo 2', sans-serif; font-weight: 600; font-size: 15px; color: var(--bone); }
+.wo-list-meta { font-size: 12px; color: var(--mist); margin-top: 3px; }
+
+/* ══════════════════════════════════════════════════════════════════
+   PROGRAM TAB — current program (circular progress ring + full
+   schedule) and available programs to enroll in.
+   ══════════════════════════════════════════════════════════════════ */
+.wo-program-current-card { background: var(--bark); border-radius: var(--pf-card-radius); padding: 18px; margin-bottom: 16px; text-align: center; }
+.wo-program-stats { font-size: 13px; color: var(--mist); margin-bottom: 2px; }
+.wo-program-current-card .btn { margin-top: 14px; width: 100%; }
+
+.wo-ring-svg { width: 140px; height: 140px; margin: 6px auto 14px; display: block; transform: rotate(-90deg); }
+.wo-ring-track { fill: none; stroke: var(--clay); stroke-width: 9; }
+.wo-ring-fill {
+  fill: none; stroke: var(--ochre); stroke-width: 9; stroke-linecap: round;
+  transition: stroke-dashoffset 0.6s cubic-bezier(.4,0,.2,1);
+}
+.wo-ring-text {
+  transform: rotate(90deg); transform-origin: 55px 55px;
+  font-family: 'Baloo 2', sans-serif; font-size: 22px; font-weight: 600; fill: var(--bone);
+}
+
+.wo-full-sched { margin-bottom: 16px; }
+.wo-sched-row {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--soil); border: 1px solid var(--clay); border-radius: 10px;
+  padding: 9px 10px; margin-bottom: 6px; font-size: 13px; cursor: pointer;
+}
+.wo-sched-week { font-family: 'Baloo 2', sans-serif; font-size: 10px; color: var(--mist); width: 28px; flex-shrink: 0; }
+.wo-sched-name { flex: 1; min-width: 0; color: var(--bone); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wo-sched-done .wo-sched-name { color: var(--mist); }
+.wo-sched-status { flex-shrink: 0; width: 16px; text-align: center; }
+.wo-sched-done .wo-sched-status { color: var(--sage); }
+.wo-sched-current .wo-sched-status { color: var(--ochre); }
+.wo-sched-current .wo-sched-name { color: var(--ochre); font-weight: 600; }
+
+/* ── Workout preview overlay (reuses .wo-pl-panel/.wo-pl-inner/.wo-pl-header/
+   .wo-pl-close/.wo-pl-title/.wo-pl-footer/.wo-pl-exercise-hdr chrome from
+   the player — this just needs its own read-only row style, no inputs). */
+.wo-preview-body { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 4px 16px 16px; }
+.wo-preview-row {
+  display: flex; justify-content: space-between; align-items: center;
+  background: var(--bark); border-radius: 10px; padding: 10px 12px; margin-bottom: 6px; font-size: 13px;
+}
+.wo-preview-row span:first-child { color: var(--bone); }
+.wo-preview-meta { color: var(--mist); font-family: 'Baloo 2', sans-serif; font-size: 12px; }
+
+.wo-hero-day:hover { color: var(--ochre); }
+
+/* ── Program action row (View Program / Stop Program side by side) ── */
+.wo-program-actions { display: flex; gap: 10px; margin-top: 14px; }
+.wo-program-actions .btn { flex: 1; margin-top: 0; }
+
+/* ── Exercise browse (New Workout → Exercises) ──
+   Reuses .wo-list-row/.wo-list-name/.wo-list-meta/.wo-filter-row chrome —
+   only the selected-state highlight and the floating build bar are new. */
+.wo-ex-selected { background: rgba(var(--ochre-rgb), 0.08); border-radius: 8px; }
+#wo-ex-build-bar:empty { display: none; }
+.wo-build-bar {
+  position: sticky; bottom: 12px; margin-top: 14px;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  background: var(--bark); border: 1px solid var(--clay); border-radius: var(--pf-card-radius);
+  padding: 12px 14px; font-size: 13px; color: var(--bone);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+}
+
+/* ── YouTube workouts library (New Workout → YouTube) ── */
+.wo-yt-add-form { background: var(--bark); border-radius: var(--pf-card-radius); padding: 14px; }
+.wo-yt-row {
+  display: flex; align-items: center; gap: 12px; padding: 10px 4px;
+  border-top: 1px solid var(--clay); cursor: pointer;
+}
+.wo-yt-row:first-child { border-top: none; }
+.wo-yt-thumb { width: 64px; height: 40px; object-fit: cover; border-radius: 6px; flex-shrink: 0; background: var(--soil); }
+.wo-yt-del { flex-shrink: 0; color: var(--mist); padding: 4px; cursor: pointer; }
+.wo-yt-del:hover { color: var(--pf-accent-orange, var(--ochre)); }
+
+/* ══════════════════════════════════════════════════════════════════
+   ICON SIZE CONTROL PANEL — single source of truth for all
+   "Non doodle" PNG icon sizes across the app. To resize any group,
+   change the variable below — every icon in that group updates in
+   one go. Targets images by filename via attribute selectors, so no
+   HTML edits are needed to retune sizes.
+   ══════════════════════════════════════════════════════════════════ */
+:root {
+  --pf-icon-quicklog:        34px;  /* Coffee / Vitamins / Hypo — Quick Log row */
+  --pf-icon-calendar-inline: 34px;  /* "Backdate Log" calendar icons (Meal/Workout/Water) */
+  --pf-icon-calendar-btn:    44px;  /* Top date-jump calendar button */
+  --pf-icon-step:            30px;  /* Step-num icons: Quick Log / Pick meals / Shopping List */
+  --pf-icon-settings-row:    38px;  /* Settings list rows: User / Food / Box / Key / Bell */
+  --pf-icon-settings-wrap:   38px;  /* Matching wrapper width so bigger icons don't clip */
+}
+
+img[src*="COFFEE.png"],
+img[src*="VITAMINS.png"],
+img[src*="HYPO.png"] {
+  width: var(--pf-icon-quicklog) !important;
+  height: var(--pf-icon-quicklog) !important;
+}
+
+#retro-toggle-lbl img[src*="CALENDAR.png"],
+#retro-toggle-lbl-wk img[src*="CALENDAR.png"],
+#wtr-retro-toggle-lbl img[src*="CALENDAR.png"] {
+  width: var(--pf-icon-calendar-inline) !important;
+  height: var(--pf-icon-calendar-inline) !important;
+}
+
+button[aria-label="Jump to date"] img[src*="CALENDAR.png"] {
+  width: var(--pf-icon-calendar-btn) !important;
+  height: var(--pf-icon-calendar-btn) !important;
+}
+
+.step-num img[src*="FOOD.png"],
+.step-num img[src*="SHOPPINGCART.png"],
+.step-num img[src*="SHOPPINGLIST.png"] {
+  width: var(--pf-icon-step) !important;
+  height: var(--pf-icon-step) !important;
+}
+
+[data-subsec] img[src*="USER.png"],
+[data-subsec] img[src*="FOOD.png"],
+[data-subsec] img[src*="BOX.png"],
+[data-subsec] img[src*="KEY.png"],
+[data-subsec] img[src*="BELL.png"] {
+  width: var(--pf-icon-settings-row) !important;
+  height: var(--pf-icon-settings-row) !important;
+}
+
+[data-subsec] span:has(> img[src*="USER.png"]),
+[data-subsec] span:has(> img[src*="FOOD.png"]),
+[data-subsec] span:has(> img[src*="BOX.png"]),
+[data-subsec] span:has(> img[src*="KEY.png"]),
+[data-subsec] span:has(> img[src*="BELL.png"]) {
+  width: var(--pf-icon-settings-wrap) !important;
+}
+
+/* ── STEP-NUM ICON VARIANT — used where a step-num circle houses an
+   icon rather than a number (Quick Log, Pick meals, Shopping List).
+   Strips the circular badge/border so only the (now-bigger) icon
+   shows, while leaving numbered steps ("1", "2") untouched. ── */
+.step-num.step-num--icon {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  width: auto !important;
+  height: auto !important;
+}
+body.person-gabi .step-num.step-num--icon {
+  background: transparent !important;
+  border-color: transparent !important;
+}
+
+/* ── GLOBAL SCREEN TITLE — bigger per request ── */
+.pf-title {
+  font-size: 34px;
+}
+
+/* ── AUTO/MANUAL (MEAL LOG) TOGGLE — no longer needs its own transition/
+   press-fx rules here. Now that it carries .seg-opt (see index.html), it
+   already gets both from the universal blocks above (the .seg-opt
+   transition rule, and .seg-opt.press-fx in the UNIVERSAL PRESS FEEDBACK
+   block) — this used to duplicate them with slightly different timing
+   (0.15s vs the universal 0.2s), which is exactly the kind of "double
+   rule" that made the animation look inconsistent from every other
+   toggle instead of matching it. ── */
+
+/* ══════════════════════════════════════════════════════════════════
+   KITCHEN MODULE — meal cards, shelves, search/filters/sort, grid,
+   slide-up sheet, create form (kitchen-overhaul-prompt.md).
+   All colors via existing CSS vars, so Gabi's theme just works — no
+   separate body.person-gabi overrides needed for any class below.
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── Shelves (PLAN default screen) ── */
+.kitchen-shelf { margin-bottom: 22px; }
+.kitchen-shelf-hdr {
+  display:flex;align-items:flex-end;justify-content:space-between;
+  margin-bottom:10px;
+}
+.kitchen-shelf-title {
+  font-family:'Baloo 2',sans-serif;font-size:17px;color:var(--bone);
+}
+.kitchen-shelf-sub { font-size:12px;color:var(--mist);margin-top:2px; }
+.kitchen-shelf-scroll {
+  display:flex;gap:12px;overflow-x:auto;-webkit-overflow-scrolling:touch;
+  padding-bottom:4px;scroll-snap-type:x proximity;
+}
+.kitchen-shelf-scroll::-webkit-scrollbar { display:none; }
+.kitchen-shelf-scroll .meal-card { flex:0 0 168px;scroll-snap-align:start; }
+
+/* ── Meal card — single reusable component (shelves, search grid, saved
+   grid all use this same markup) ── */
+.meal-card {
+  background:var(--bark);border-radius:var(--pf-card-radius);
+  overflow:hidden;cursor:pointer;display:flex;flex-direction:column;
+}
+.meal-card-img-wrap { position:relative;width:100%;aspect-ratio:4/3;background:var(--clay); }
+.meal-card-img-wrap img { width:100%;height:100%;object-fit:cover;display:block; }
+.meal-card-img-placeholder {
+  width:100%;height:100%;display:flex;align-items:center;justify-content:center;
+  font-size:32px;color:var(--mist);
+}
+.meal-card-ribbon {
+  position:absolute;top:8px;left:8px;
+  background:var(--terra);color:var(--bone);
+  font-family:'Baloo 2',sans-serif;font-size:9px;letter-spacing:1.5px;
+  padding:3px 7px;border-radius:6px;text-transform:uppercase;
+}
+.meal-card-save {
+  position:absolute;top:6px;right:6px;width:28px;height:28px;border-radius:50%;
+  border:none;background:rgba(0,0,0,0.45);color:var(--bone);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+}
+.meal-card-save.active { color:var(--ochre); }
+.kitchen-listed-card {
+  position:relative;flex:0 0 auto;width:72px;display:flex;flex-direction:column;align-items:center;gap:4px;
+}
+.kitchen-listed-card img, .kitchen-listed-card-placeholder {
+  width:60px;height:60px;border-radius:12px;object-fit:cover;background:var(--bark);
+  display:flex;align-items:center;justify-content:center;font-size:22px;
+}
+.kitchen-listed-card-name {
+  font-size:10px;color:var(--sand);text-align:center;line-height:1.2;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+}
+.kitchen-listed-card-remove {
+  position:absolute;top:-4px;right:4px;width:18px;height:18px;border-radius:50%;
+  border:none;background:rgba(0,0,0,0.6);color:var(--bone);font-size:11px;line-height:1;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+}
+.meal-card-yt {
+  position:absolute;bottom:6px;right:6px;width:22px;height:16px;
+  display:flex;align-items:center;justify-content:center;
+  filter:drop-shadow(0 1px 2px rgba(0,0,0,.5));
+}
+.meal-detail-yt {
+  position:relative;border-radius:12px;overflow:hidden;cursor:pointer;
+  aspect-ratio:16/9;background:var(--clay);
+}
+.meal-detail-yt img { width:100%;height:100%;object-fit:cover;display:block; }
+.meal-detail-yt-play {
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  background:rgba(0,0,0,0.25);
+}
+.meal-detail-yt-play svg { filter:drop-shadow(0 2px 4px rgba(0,0,0,.5));transform:scale(2); }
+.meal-detail-yt--playing { cursor:default; }
+.meal-detail-yt--playing iframe { position:absolute;inset:0;width:100%;height:100%;border:none; }
+.meal-card-body { padding:10px 11px 11px;display:flex;flex-direction:column;gap:6px;flex:1; }
+.meal-card-name {
+  font-size:13.5px;color:var(--bone);line-height:1.3;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+}
+.meal-card-sub { font-size:11px;color:var(--mist); }
+.meal-card-stats {
+  display:flex;gap:8px;flex-wrap:wrap;font-family:'Baloo 2',sans-serif;
+  font-size:10.5px;color:var(--sand);
+}
+.meal-card-actions { margin-top:auto;display:flex;gap:6px; }
+.meal-card-act {
+  flex:1;border:1px solid var(--clay);background:transparent;color:var(--ochre);
+  border-radius:8px;padding:6px 2px;font-family:'Baloo 2',sans-serif;font-size:10px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  cursor:pointer;transition:all .2s;line-height:1.1;
+}
+.meal-card-act span { white-space:nowrap; }
+.meal-card-act--list.active { background:var(--pf-accent-orange);color:var(--pf-bg);border-color:transparent; }
+.meal-card-act--cook { padding:6px 2px; }
+.meal-card-act--cook img { width:20px;height:20px;object-fit:contain;display:block; }
+
+/* ── Sort By — single list box, animated expand, replaces old chip grid ── */
+.kitchen-sort-list {
+  background:var(--bark);border:1px solid var(--clay);border-radius:12px;overflow:hidden;
+}
+.kitchen-sort-row {
+  padding:11px 14px;font-family:'Baloo 2',sans-serif;font-size:13px;color:var(--sand);
+  border-bottom:1px solid var(--clay);cursor:pointer;transition:background .15s;
+}
+.kitchen-sort-row:last-child { border-bottom:none; }
+.kitchen-sort-row.active { color:var(--ochre);font-weight:600; }
+.kitchen-sort-row--clear { color:var(--mist);font-size:12px; }
+
+/* ── Search bar + filter/sort buttons ── */
+.kitchen-plantab-bar { margin-bottom:14px; }
+.kitchen-search-row { margin-bottom:10px;display:flex;align-items:center;gap:8px; }
+.kitchen-search-exit {
+  flex-shrink:0;width:30px;height:30px;border-radius:50%;border:1px solid var(--clay);
+  background:transparent;color:var(--mist);font-size:13px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+}
+.kitchen-search-input {
+  flex:1;min-width:0;box-sizing:border-box;padding:12px 14px;
+  background:var(--bark);border:1.5px solid var(--clay);border-radius:12px;
+  color:var(--bone);font-family:'Inter',sans-serif;font-size:14px;
+}
+.kitchen-search-input:focus { outline:none;border-color:var(--ochre); }
+.kitchen-search-actions { display:flex;gap:8px;margin-bottom:6px; }
+.kitchen-filter-btn {
+  flex:1;padding:9px;border:1px solid var(--clay);border-radius:10px;
+  background:transparent;color:var(--sand);font-family:'Baloo 2',sans-serif;
+  font-size:12px;letter-spacing:0.5px;cursor:pointer;
+}
+.kitchen-filter-btn.active { border-color:var(--ochre);color:var(--ochre); }
+/* Sort By — tiny animated expand right under the button, not a sheet */
+.kitchen-sort-expand {
+  max-height:0;overflow:hidden;opacity:0;
+  transition:max-height .28s ease, opacity .2s ease, margin .28s ease;
+}
+.kitchen-sort-expand.open { max-height:220px;opacity:1;margin-bottom:14px; }
+
+/* ── Grid (search results, saved) — 2 cards per row ── */
+.kitchen-grid { display:grid;grid-template-columns:1fr 1fr;gap:12px; }
+.kitchen-empty { font-size:13px;color:var(--mist);padding:20px 4px;text-align:center; }
+
+/* ── Chips (filter sheet options, create-form ingredient tags) ── */
+.kitchen-chip {
+  display:inline-flex;align-items:center;padding:7px 12px;border-radius:999px;
+  border:1px solid var(--clay);background:transparent;color:var(--sand);
+  font-family:'Baloo 2',sans-serif;font-weight:600;font-size:12px;
+  cursor:pointer;margin:0 6px 6px 0;transition:all .15s;
+}
+.kitchen-chip.active { background:var(--pf-accent-orange);color:var(--pf-bg);border-color:transparent; }
+.kitchen-chip-row { display:flex;flex-wrap:wrap;margin-top:2px; }
+
+/* ── Slide-up sheet (Filters / Sort By) — new component, no equivalent
+   existed elsewhere in the app; matches the translateX push-panel visual
+   language used by #entry-detail-panel, just translateY since this is a
+   partial-height sheet rather than a full screen. z-index sits above
+   .bnav (100) so the sheet is never covered by the bottom nav bar. ── */
+.kitchen-sheet-overlay {
+  display:none;position:fixed;inset:0;z-index:150;
+  background:rgba(0,0,0,0);align-items:flex-end;justify-content:center;
+  transition:background .25s ease;
+}
+.kitchen-sheet-overlay.open { background:rgba(0,0,0,0.55); }
+.kitchen-sheet {
+  width:100%;max-width:520px;max-height:80vh;overflow-y:auto;
+  background:var(--soil);border-radius:20px 20px 0 0;
+  padding:18px 16px calc(64px + env(safe-area-inset-bottom));
+  transform:translateY(100%);transition:transform .3s cubic-bezier(.32,.72,0,1);
+}
+.kitchen-sheet-overlay.open .kitchen-sheet { transform:translateY(0); }
+.kitchen-sheet-hdr { display:flex;align-items:center;justify-content:space-between;margin-bottom:14px; }
+.kitchen-sheet-title { font-family:'Baloo 2',sans-serif;font-size:18px;color:var(--bone); }
+.kitchen-sheet-clear { background:none;border:none;color:var(--ochre);font-family:'Baloo 2',sans-serif;font-weight:600;font-size:12px;cursor:pointer; }
+.kitchen-sheet-close {
+  background:none;border:none;color:var(--mist);font-size:15px;cursor:pointer;
+  width:26px;height:26px;display:flex;align-items:center;justify-content:center;
+}
+.kitchen-sheet-section { margin-bottom:16px; }
+.kitchen-sheet-label {
+  font-family:'Baloo 2',sans-serif;font-size:13.5px;font-weight:600;letter-spacing:1px;
+  color:var(--bone);text-transform:uppercase;margin-bottom:6px;
+}
+
+/* ── Create tab form ── */
+.kitchen-create-form { display:flex;flex-direction:column; }
+
+/* ══════════════════════════════════════════════════════════════════
+   COOK MODULE — recipe-selection screen + fullscreen guided Cooking
+   Mode (renderKitchenCook()/ck* functions in kitchen.js). New class
+   namespace (.ck-*), decoupled from the workout player's .wo-pl-*
+   classes even though the fullscreen-overlay look is intentionally
+   similar (see #ck-player-panel comment in index.html).
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── Empty state ── */
+.ck-empty { text-align:center;padding:48px 20px 20px; }
+.ck-empty-emoji { font-size:40px;margin-bottom:14px; }
+.ck-empty-title { font-family:'Baloo 2',sans-serif;font-size:19px;color:var(--bone);margin-bottom:6px; }
+.ck-empty-sub { font-size:13px;color:var(--mist);margin-bottom:18px;line-height:1.5; }
+.ck-empty .btn { max-width:220px;margin:0 auto; }
+
+/* ── Recipe selection screen ── */
+.ck-recipe-list { display:flex;flex-direction:column;gap:12px; }
+.ck-recipe-card {
+  display:flex;gap:12px;background:var(--bark);border-radius:var(--pf-card-radius);
+  padding:10px;align-items:stretch;
+}
+.ck-recipe-card-img-wrap {
+  width:92px;flex-shrink:0;border-radius:10px;overflow:hidden;background:var(--clay);
+}
+.ck-recipe-card-img-wrap img { width:100%;height:100%;object-fit:cover;display:block; }
+.ck-recipe-card-img-placeholder {
+  width:100%;height:100%;min-height:92px;display:flex;align-items:center;justify-content:center;
+  font-size:28px;color:var(--mist);
+}
+.ck-recipe-card-body { flex:1;min-width:0;display:flex;flex-direction:column;gap:6px;justify-content:center; }
+.ck-recipe-card-name {
+  font-family:'Baloo 2',sans-serif;font-size:15px;color:var(--bone);line-height:1.25;
+}
+.ck-recipe-card-meta { font-size:12px;color:var(--mist); }
+.ck-recipe-card .btn { margin-top:2px;padding:10px; }
+
+/* ── Fullscreen Cooking Mode overlay ── */
+.ck-panel {
+  position:fixed;inset:0;z-index:99999;
+  background:var(--soil);
+  padding-top:env(safe-area-inset-top);
+  padding-bottom:env(safe-area-inset-bottom);
+  opacity:0;transform:translateY(14px);
+  transition:opacity .22s ease, transform .22s ease;
+}
+.ck-panel.open { opacity:1;transform:translateY(0); }
+.ck-inner { height:100%;display:flex;flex-direction:column;overflow:hidden;position:relative; }
+
+/* ── Progress header ── */
+.ck-header { padding:14px 16px 12px;border-bottom:1px solid var(--clay);flex-shrink:0; }
+.ck-header-top { display:flex;align-items:center;gap:12px;margin-bottom:8px; }
+.ck-close { font-size:18px;color:var(--mist);cursor:pointer;padding:4px;background:none;border:none; }
+.ck-header-title {
+  flex:1;font-family:'Baloo 2',sans-serif;font-weight:600;font-size:15px;color:var(--bone);
+  text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.ck-step-count {
+  font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--mist);margin-bottom:8px;
+}
+.ck-progress-dots { display:flex;gap:6px;flex-wrap:wrap; }
+.ck-dot { width:8px;height:8px;border-radius:50%;background:var(--clay);flex-shrink:0; }
+.ck-dot.done { background:var(--ochre);opacity:0.55; }
+.ck-dot.current { background:var(--ochre);transform:scale(1.35); }
+.ck-progress-bar { height:5px;border-radius:4px;background:var(--clay);overflow:hidden; }
+.ck-progress-bar-fill { height:100%;background:var(--ochre);transition:width .3s ease; }
+.ck-progress-pct { font-size:11px;color:var(--mist);margin-top:4px; }
+
+/* ── Video toggle (collapsed by default) ── */
+.ck-video-toggle {
+  padding:10px 16px;font-size:13px;color:var(--ochre);cursor:pointer;flex-shrink:0;
+  border-bottom:1px solid var(--clay);
+}
+.ck-video-frame { flex-shrink:0;position:relative;padding-bottom:33.75%;height:0;overflow:hidden;background:#000; }
+.ck-video-frame iframe { position:absolute;inset:0;width:100%;height:100%;border:none; }
+
+.ck-body { flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 16px 24px; }
+
+/* ── THE POEM — continuous scrolling step text, no boxing. Done/upcoming
+   steps sit dimmed and smaller; the current step reads bigger and
+   brighter, scrolled to just under the header like a teleprompter. ── */
+.ck-poem { padding-bottom:12px; }
+.ck-poem-line {
+  position:relative;padding:14px 44px 14px 2px;
+  transition:opacity .3s ease, font-size .3s ease;
+}
+.ck-poem-text { font-size:15px;line-height:1.6;color:var(--mist); }
+.ck-poem-title { font-weight:700;color:var(--sand); }
+.ck-poem-line--done { opacity:0.4; }
+.ck-poem-line--done .ck-poem-text { text-decoration:line-through; }
+.ck-poem-line--upcoming { opacity:0.5; }
+.ck-poem-line--current { opacity:1;padding-top:6px; }
+.ck-poem-line--current .ck-poem-text { font-size:20px;line-height:1.45;color:var(--bone); }
+.ck-poem-line--current .ck-poem-title { color:var(--ochre);font-size:1.05em; }
+
+/* Mark-complete — outline circle that fills solid on tap */
+.ck-mark-circle {
+  position:absolute;right:2px;top:14px;width:30px;height:30px;border-radius:50%;
+  border:2px solid var(--ochre);background:transparent;cursor:pointer;
+  transition:background .2s ease, transform .15s ease;
+}
+.ck-mark-circle:active { transform:scale(0.9); }
+.ck-mark-circle.filled { background:var(--ochre);transform:scale(1.08); }
+
+/* ── THE CLOCKS — live at the top. One compact box per active timer:
+   label, digits, Pause/Stop/Reset + -5/-1/+1/+5. The current step's own
+   preloaded (not-yet-started) timer gets an accent border so it stands
+   out from background timers still running from earlier steps. ── */
+.ck-timers-bar {
+  display:flex;gap:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;
+  padding:10px 16px;flex-shrink:0;border-bottom:1px solid var(--clay);
+}
+.ck-timerbox {
+  flex:0 0 auto;min-width:128px;background:var(--bark);border-radius:12px;
+  border:1.5px solid var(--clay);padding:8px 10px;text-align:center;
+}
+.ck-timerbox.pending { border-color:var(--ochre); }
+.ck-timerbox.final10 { border-color:var(--terra); }
+.ck-timerbox-label {
+  font-family:'Baloo 2',sans-serif;font-size:10.5px;color:var(--sand);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px;
+}
+.ck-timerbox-digits {
+  font-family:'Baloo 2',sans-serif;font-size:24px;font-weight:700;color:var(--bone);line-height:1.1;
+}
+.ck-timerbox.final10 .ck-timerbox-digits { color:var(--terra);animation:ckTimerPulse .5s ease-in-out infinite; }
+@keyframes ckTimerPulse { 0%,100% { opacity:1; } 50% { opacity:0.55; } }
+.ck-timerbox-row { display:flex;gap:3px;justify-content:center;margin-top:6px; }
+.ck-timerbox-btn {
+  border:1px solid var(--clay);background:transparent;color:var(--sand);
+  border-radius:6px;padding:4px 6px;font-family:'Baloo 2',sans-serif;font-size:10.5px;
+  cursor:pointer;flex:1;
+}
+.ck-timerbox-btn:active { transform:scale(0.94); }
+.ck-timerbox-main { background:var(--pf-accent-orange);color:var(--pf-bg);border-color:transparent;font-weight:600; }
+.ck-timerbox-stop { color:var(--terra);border-color:var(--terra); }
+
+/* ── Auto Mode + Alarm choice — slim settings row under the timers ── */
+.ck-settings-row { padding:2px 16px 18px;flex-shrink:0; }
+.ck-auto-row, .ck-alarm-row {
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  margin-top:12px;font-size:13px;color:var(--sand);
+}
+.ck-switch { position:relative;display:inline-block;width:38px;height:22px; }
+.ck-switch input { opacity:0;width:0;height:0; }
+.ck-switch-track {
+  position:absolute;inset:0;background:var(--clay);border-radius:999px;cursor:pointer;transition:background .2s;
+}
+.ck-switch-track::before {
+  content:'';position:absolute;width:16px;height:16px;left:3px;top:3px;
+  background:var(--bone);border-radius:50%;transition:transform .2s;
+}
+.ck-switch input:checked + .ck-switch-track { background:var(--pf-accent-orange); }
+.ck-switch input:checked + .ck-switch-track::before { transform:translateX(16px); }
+.ck-alarm-options { display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end; }
+.ck-alarm-chip {
+  border:1px solid var(--clay);background:transparent;color:var(--mist);
+  border-radius:999px;padding:5px 10px;font-size:11px;cursor:pointer;
+}
+.ck-alarm-chip.active { background:var(--pf-accent-orange);color:var(--pf-bg);border-color:transparent; }
+
+/* ── Full-screen timer alert — darkens/blurs the session behind it,
+   finished clock takes over centered and bigger, 00:00 pulsing. ── */
+.ck-normal-content { display:flex;flex-direction:column;height:100%;transition:filter .25s ease; }
+.ck-normal-content.ck-blurred { filter:blur(10px) brightness(0.5);pointer-events:none; }
+.ck-alert-overlay {
+  position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:10px;
+  background:rgba(0,0,0,0.35);
+}
+.ck-alert-close {
+  position:absolute;top:18px;right:18px;width:34px;height:34px;border-radius:50%;
+  border:1px solid var(--clay);background:var(--bark);color:var(--bone);
+  font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+}
+.ck-alert-label {
+  font-family:'Baloo 2',sans-serif;font-size:18px;color:var(--sand);text-align:center;padding:0 30px;
+}
+.ck-alert-digits {
+  font-family:'Baloo 2',sans-serif;font-size:72px;font-weight:700;color:var(--terra);
+  animation:ckTimerPulse .8s ease-in-out infinite;
+}
+.ck-alert-stop { max-width:200px;margin-top:8px; }
+
+/* ── Recipe completion screen ── */
+.ck-complete-screen { text-align:center;padding:60px 16px 24px; }
+.ck-complete-emoji { font-size:44px;margin-bottom:10px; }
+.ck-complete-title { font-family:'Baloo 2',sans-serif;font-size:24px;color:var(--bone);margin-bottom:6px; }
+.ck-complete-sub { font-size:14px;color:var(--mist);margin-bottom:24px; }
+.ck-complete-stats {
+  display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:28px;
+  text-align:center;
+}
+.ck-complete-stats > div { display:flex;flex-direction:column;gap:4px; }
+.ck-complete-stat-val { font-family:'Baloo 2',sans-serif;font-size:20px;color:var(--ochre);font-weight:700; }
+.ck-complete-stat-label {
+  font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--mist);
+}
+.ck-complete-actions { display:flex;flex-direction:column;gap:8px;max-width:280px;margin:0 auto; }
+.ck-remove-btn { background:transparent;border:1px solid var(--terra);color:var(--terra); }
+
+/* ════════════════════════════════════════════════════════════════════════
+   Merged from anim.css during file consolidation (July 2026).
+   ════════════════════════════════════════════════════════════════════════ */
+
+/* ════════════════════════════════════════════════════════════════════════
+   ANIM.CSS — all JS-triggered animations live here, in one place.
+   Pairs with anim.js, which contains the JS logic that adds/removes the
+   classes these keyframes key off of.
+
+   Sections:
+     1. Person switch — sec-stage slide (triggered by togglePerson in anim.js)
+     2. Log FAB overlay — expanding circle on tapping "+" (triggered by
+        the FAB tap listener in anim.js)
+     3. Log section entrance — fade+lift override for #sec-log specifically
+        (every other tab's slide is handled by showSec() in ui.js and is
+        NOT touched by this file)
+
+   Static/structural CSS (colors, layout, theming) stays in style.css.
+   Only transient, JS-driven animation keyframes belong here.
+   ════════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. PERSON SWITCH SLIDE — #sec-stage ──
+   Classes are added/removed by togglePerson() in anim.js. Base layout
+   (position, z-index) for #sec-stage lives in style.css since it's
+   structural, not animation-specific. */
+#sec-stage.person-slide-out {
+  animation: personSlideOut 0.5s cubic-bezier(.4,0,.6,1) forwards;
+}
+#sec-stage.person-slide-in {
+  animation: personSlideIn 0.55s cubic-bezier(.2,.8,.4,1) forwards;
+}
+@keyframes personSlideOut {
+  from { transform: translateY(0);     opacity: 1; }
+  to   { transform: translateY(-55px); opacity: 0; }
+}
+@keyframes personSlideIn {
+  from { transform: translateY(45px);  opacity: 0; }
+  to   { transform: translateY(0);     opacity: 1; }
+}
+
+/* ── 2. LOG FAB OVERLAY — expanding circle on tapping "+" ──
+   Spawned/removed by anim.js. Independent feature: if you want to remove
+   just the FAB circle effect, delete this section plus the
+   spawnLogFabOverlay()/initLogFabAnim() functions in anim.js — nothing
+   else in the app calls into them. */
+#log-fab-overlay {
+  position: fixed;
+  border-radius: 50%;
+  background: var(--ochre, #C8863A);
+  pointer-events: none;
+  z-index: 9998; /* below the + icon, above everything else */
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0.35;
+  will-change: transform, opacity;
+}
+body.person-gabi #log-fab-overlay { background: var(--gabi-moon-bright, #6BA3C8); }
+
+/* Two independent timelines on the SAME element via two separately-timed
+   animations. The circle's target size is capped in JS to roughly 65% of
+   the distance to the viewport edge, and the fade finishes BEFORE the
+   expand does (0.5s fade vs 0.6s expand, both starting immediately) — so
+   well before the circle would reach the screen edge it has already
+   dissolved away, instead of growing edge-to-edge while still visible.
+   Peak opacity is capped well below solid (0.35) so it reads as a soft
+   wash, not a wall of color. */
+@keyframes logFabExpand {
+  from { transform: translate(-50%, -50%) scale(0); }
+  to   { transform: translate(-50%, -50%) scale(1); }
+}
+@keyframes logFabFade {
+  0%   { opacity: 0.35; }
+  100% { opacity: 0; }
+}
+#log-fab-overlay.log-fab-run {
+  animation:
+    logFabExpand 0.6s cubic-bezier(0.2,0,0.2,1) forwards,
+    logFabFade   0.5s linear forwards;
+}
+
+/* "+" icon always sits above the overlay */
+.bnav-log-icon {
+  position: relative;
+  z-index: 9999;
+}
+
+/* ── 3. LOG SECTION ENTRANCE — fade + lift instead of slide ──
+   showSec() (ui.js) still adds .sec-out-left/right / .sec-in-left/right
+   to drive the slide on every tab — we don't touch that logic in ui.js.
+   Here we simply override what those classes animate, ONLY for #sec-log,
+   with a more specific selector. No JS coordination required beyond what
+   showSec() already does.
+   The in-animation is slowed (0.45s → 0.8s) and given a short delay
+   (0.25s) so the section visibly appears later, after the FAB overlay
+   has had time to dissolve, rather than popping in immediately. */
+#sec-log.sec-in-left,
+#sec-log.sec-in-right {
+  animation: logSecFadeIn 0.8s cubic-bezier(0.2,0,0.2,1) 0.25s forwards !important;
+  opacity: 0; /* hold hidden during the delay before the animation starts */
+}
+#sec-log.sec-out-left,
+#sec-log.sec-out-right {
+  animation: logSecFadeOut 0.3s cubic-bezier(0.4,0,0.2,1) forwards !important;
+}
+@keyframes logSecFadeIn {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes logSecFadeOut {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(18px); }
+}
+
+/* ── 4. PROGRESS TAB — period switch dot/curve transition ──
+   Real per-point movement now lives in setProgressPeriod() (progress.js),
+   which slides each dot (matched by date) from its old pixel position to
+   its new one via inline transform, and crossfades the curve/fill. See
+   that function for details — nothing declarative needed here beyond
+   dots/curve being normal elements with no conflicting transitions. */

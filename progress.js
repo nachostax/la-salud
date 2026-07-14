@@ -1225,9 +1225,10 @@ function renderTrends() {
   // one of these two numbers in a more informative, charted form.
 
   // ── STEPS ──
-  // Steps are logged as Walking-type workout entries (walkBy:'steps'), so
-  // this pulls steps_logged off that subset specifically rather than off
-  // duration_min, which Walking entries logged by time won't have set.
+  // Steps are logged as Walking-type workout entries. Walking is steps-only
+  // everywhere in the app now (no duration-based logging mode), so every
+  // Walking entry has steps_logged populated — this pulls that field off
+  // the Walking subset specifically rather than off duration_min.
   if (progressCategory === 'activity') {
     // BUG FIX (found while scoping Step 11 Part C): this used to read
     // S.settings.movementTargets[person].steps_day, but settings.js never

@@ -8,7 +8,7 @@
 // Bump CACHE_VERSION any time you change one of the cached files below.
 // This matches the existing "?v=20260710" cache-busting convention already
 // used in index.html — just remember to bump both together.
-const CACHE_VERSION = 'la-salud-shell-v1';
+const CACHE_VERSION = 'la-salud-shell-v3';
 
 const SHELL_FILES = [
   './',
@@ -22,7 +22,9 @@ const SHELL_FILES = [
   './log.js',
   './vitals.js',
   './progress.js',
-  './settings.js'
+  './settings.js',
+  './fingerprint.png',
+  './fingerprintwhite.png'
 ];
 
 self.addEventListener('install', event => {
